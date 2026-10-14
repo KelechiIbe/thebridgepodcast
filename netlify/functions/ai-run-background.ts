@@ -90,7 +90,8 @@ export default async (req: Request) => {
     }
 
     if (b.kind === "brand") {
-      const p = brandPrompt(String(b.payload.text ?? ""), b.payload.colors ?? []);
+      const list = (v: unknown) => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string").slice(0, 40) : []);
+      const p = brandPrompt(String(b.payload.text ?? ""), list(b.payload.colors), { fonts: list(b.payload.fonts), logos: list(b.payload.logos) });
       const out = await generateJSON({ provider, model, system: p.system, user: p.user, schema: BRAND_SCHEMA, maxTokens: 3000 });
       await update({ status: "done", progress: 100, message: "Brand suggestions ready", result: out.data });
       return;

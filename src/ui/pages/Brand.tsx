@@ -7,10 +7,13 @@ import { store } from "../../lib/store";
 import { uploadAsset } from "../../lib/assets";
 import { prepare, DEFAULT_MUSIC, type Production } from "../../lib/engine";
 import { pdfColours, pdfText } from "../../lib/notes";
+import { guessFromKit, kitSummary, pickFace, readBrandKit, type BrandKit, type KitFile } from "../../lib/brandkit";
 import { api, serverAvailable, waitForJob } from "../../lib/api";
 import { luminance } from "../../lib/render/text";
 import { useApp } from "../ctx";
 import { Preview } from "../components/Preview";
+
+const ROLE_LABEL = { display: "Headlines", body: "Captions and text", mono: "Labels" } as const;
 
 const PALETTE_LABELS: Record<keyof Palette, string> = {
   bg: "Background",
@@ -35,6 +38,7 @@ export function Brand() {
   const [prod, setProd] = useState<Production | null>(null);
   const [orientation, setOrientation] = useState<Orientation>("landscape");
   const [guide, setGuide] = useState<string | null>(null);
+  const [imported, setImported] = useState<{ before: Show; source: string; lines: string[]; notes: string } | null>(null);
   const timer = useRef(0);
   const editable = app.can("edit");
 
@@ -62,30 +66,91 @@ export function Brand() {
   const upload = async (f: File | undefined, kind: AssetRef["kind"], folder: string): Promise<AssetRef | null> => (f ? uploadAsset(app.show.id, f, kind, folder) : null);
 
   const importGuide = async (f: File) => {
+    const isPdf = /\.pdf$/i.test(f.name) || f.type === "application/pdf";
+    const isKit = /\.(zip|html?)$/i.test(f.name);
+    if (!isPdf && !isKit) return app.toast("Choose a PDF, an .html page or a .zip of the project folder.", true);
+    if (isPdf && !serverAvailable()) return app.toast("Reading a PDF guide needs the online studio. In demo mode, try an .html page or a .zip.", true);
+    const before = show;
     try {
       setGuide("Reading the guide");
-      const [text, colors] = await Promise.all([pdfText(f, 30), pdfColours(f)]);
-      const { jobId } = await api.startAi({ kind: "brand", showId: app.show.id, payload: { text, colors } });
-      const job: any = await waitForJob(jobId, (m) => setGuide(m));
-      const r = job.result;
+      let text = "";
+      let colors: string[] = [];
+      let kit: BrandKit | null = null;
+      if (isPdf) {
+        [text, colors] = await Promise.all([pdfText(f, 30), pdfColours(f)]);
+      } else {
+        kit = await readBrandKit(f);
+        text = kitSummary(kit);
+        colors = kit.colors;
+        if (kit.pdf) {
+          const [t, c] = await Promise.all([pdfText(kit.pdf, 30), pdfColours(kit.pdf)]);
+          text += `\n\nText of the PDF in the folder:\n${t}`;
+          colors = [...new Set([...colors, ...c])].slice(0, 24);
+        }
+        if (!kit.tokens.length && !kit.colors.length && !kit.fonts.length && !kit.logos.length && !kit.pdf && !kit.text)
+          throw new Error("Couldn't find any colours, fonts or logos in that file.");
+      }
+
+      // the AI matches the guide to the stage when the online studio is connected; otherwise the studio reads the code's own names
+      let r: { palette?: Partial<Palette>; displayFont?: string; bodyFont?: string; monoFont?: string; logoFile?: string; wordmark?: string; byline?: string; notes?: string };
+      if (serverAvailable()) {
+        setGuide("Matching it to the stage");
+        const { jobId } = await api.startAi({
+          kind: "brand",
+          showId: app.show.id,
+          payload: { text, colors, fonts: kit?.fonts.filter((x) => x.faces.some((y) => y.file)).map((x) => x.family) ?? [], logos: kit?.logos.map((l) => l.path) ?? [] },
+        });
+        const job: any = await waitForJob(jobId, (m) => setGuide(m));
+        r = job.result ?? {};
+      } else {
+        const g = guessFromKit(kit!, brand);
+        r = { palette: g.palette, displayFont: g.display ?? "", bodyFont: g.body ?? "", monoFont: g.mono ?? "", logoFile: g.logo?.path ?? "" };
+      }
+
+      setGuide("Applying it");
       const hex = /^#[0-9a-fA-F]{6}$/;
       const palette = { ...brand.palette };
-      for (const k of Object.keys(palette) as (keyof Palette)[]) if (hex.test(r.palette?.[k] ?? "")) palette[k] = r.palette[k].toUpperCase();
+      let colourCount = 0;
+      for (const k of Object.keys(palette) as (keyof Palette)[]) {
+        const v = r.palette?.[k] ?? "";
+        if (hex.test(v) && v.toUpperCase() !== palette[k].toUpperCase()) colourCount++;
+        if (hex.test(v)) palette[k] = v.toUpperCase();
+      }
+      const uploaded = new Map<string, string>();
+      const asFile = (k: KitFile) => new File([k.data.slice()], k.name, { type: k.mime });
+      const lines: string[] = [];
+      const fontFor = async (role: "display" | "body" | "mono", family: string | undefined): Promise<FontChoice> => {
+        if (!family?.trim()) return brand.fonts[role];
+        const kf = kit?.fonts.find((x) => x.family.toLowerCase() === family.trim().toLowerCase());
+        const face = kf ? pickFace(kf, role) : null;
+        if (kf && face?.file) {
+          let path = uploaded.get(face.file.path);
+          if (!path) {
+            path = (await uploadAsset(app.show.id, asFile(face.file), "font", "fonts")).path;
+            uploaded.set(face.file.path, path);
+          }
+          lines.push(`${ROLE_LABEL[role]}: ${kf.family}, from ${face.file.name}`);
+          return { family: kf.family, source: "upload", assetPath: path, weight: face.weight, weightMax: face.weightMax };
+        }
+        lines.push(`${ROLE_LABEL[role]}: ${family.trim()}, from Google Fonts`);
+        return { family: family.trim(), source: "google" };
+      };
+      const fonts = {
+        display: await fontFor("display", r.displayFont),
+        body: await fontFor("body", r.bodyFont),
+        mono: await fontFor("mono", r.monoFont),
+      };
+      const logoKit = kit?.logos.length ? (kit.logos.find((l) => l.path === r.logoFile) ?? kit.logos[0]) : null;
+      const logo = logoKit ? await uploadAsset(app.show.id, asFile(logoKit), "logo", "logo") : brand.logo;
+      if (logoKit) lines.unshift(`Logo: ${logoKit.name}`);
+      lines.unshift(colourCount ? `${colourCount} colour${colourCount === 1 ? "" : "s"} changed` : "Colours unchanged");
       change({
         ...show,
-        brand: {
-          ...brand,
-          palette,
-          wordmark: r.wordmark || brand.wordmark,
-          byline: r.byline || brand.byline,
-          fonts: {
-            display: r.displayFont ? { family: r.displayFont, source: "google" } : brand.fonts.display,
-            body: r.bodyFont ? { family: r.bodyFont, source: "google" } : brand.fonts.body,
-            mono: r.monoFont ? { family: r.monoFont, source: "google" } : brand.fonts.mono,
-          },
-        },
+        brand: { ...brand, palette, logo, wordmark: r.wordmark || brand.wordmark, byline: r.byline || brand.byline, fonts },
       });
-      app.toast(r.notes ? `Applied. ${r.notes}` : "Applied the brand guide");
+      const notes = r.notes || (serverAvailable() ? "" : "Matched without the AI, from the names in the code. The online studio's AI reads guides more closely.");
+      setImported({ before, source: f.name, lines, notes });
+      app.toast("Brand guide applied");
     } catch (e) {
       app.toast((e as Error).message, true);
     } finally {
@@ -113,7 +178,7 @@ export function Brand() {
               {f.assetPath ? "Replace file" : "Upload .woff2/.ttf"}
               <input type="file" accept=".woff2,.woff,.ttf,.otf" hidden onChange={async (e) => {
                 const a = await upload(e.target.files?.[0], "font", "fonts");
-                if (a) set({ ...f, assetPath: a.path });
+                if (a) set({ ...f, assetPath: a.path, weight: undefined, weightMax: undefined });
               }} />
             </label>
           )}
@@ -205,11 +270,37 @@ export function Brand() {
         <div className="stack">
           <div className="panel stack">
             <h2 className="sec">Brand guide</h2>
-            <p className="small muted" style={{ margin: 0 }}>Upload the brand guide as a PDF and the AI suggests colours, fonts and wording. You can change anything afterwards.</p>
-            <label className="btn" style={{ justifySelf: "start" }} aria-disabled={!serverAvailable() || !!guide}>
-              {guide ?? "Import a brand guide (PDF)"}
-              <input type="file" accept="application/pdf" hidden disabled={!serverAvailable() || !!guide || !editable} onChange={(e) => e.target.files?.[0] && importGuide(e.target.files[0])} />
+            <p className="small muted" style={{ margin: 0 }}>
+              Upload the guide as a PDF, a web page (.html) or the whole project folder as a .zip. The studio reads its colours, fonts and logo, including any font
+              files in the folder, and fits them to the stage. You can change anything afterwards.
+            </p>
+            <label className="btn" style={{ justifySelf: "start" }} aria-disabled={!!guide || !editable}>
+              {guide ? `${guide}…` : "Import a brand guide"}
+              <input
+                type="file"
+                accept=".pdf,.html,.htm,.zip,application/pdf,text/html,application/zip,application/x-zip-compressed"
+                hidden
+                disabled={!!guide || !editable}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  e.target.value = "";
+                  if (file) importGuide(file);
+                }}
+              />
             </label>
+            {imported && (
+              <div className="stack tight" style={{ background: "var(--panel2)", borderRadius: 10, padding: 12 }}>
+                <b>Imported from {imported.source}</b>
+                <ul className="small" style={{ margin: 0, paddingLeft: 18 }}>
+                  {imported.lines.map((l, i) => <li key={i}>{l}</li>)}
+                </ul>
+                {imported.notes && <span className="small muted">{imported.notes}</span>}
+                <div className="row">
+                  <button className="btn sm" onClick={() => { change(imported.before); setImported(null); app.toast("Brand restored"); }}>Undo import</button>
+                  <button className="btn ghost sm" onClick={() => setImported(null)}>Keep it</button>
+                </div>
+              </div>
+            )}
           </div>
           <div className="panel stack">
             <h2 className="sec">Logo and scene</h2>

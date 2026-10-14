@@ -108,7 +108,7 @@ The written form stays on screen and in the captions, and only the voice hears t
 
 ## Brand
 
-The **Brand** page holds the logo, colours, fonts, background scene, music cues (sting, chapter ident, voice-note blip, outro bed), intro and outro videos for each orientation, the end card with its QR code, and the AI-voices disclosure. **Import a brand guide** reads a PDF guide and suggests colours, fonts and wording for you to accept or change.
+The **Brand** page holds the logo, colours, fonts, background scene, music cues (sting, chapter ident, voice-note blip, outro bed), intro and outro videos for each orientation, the end card with its QR code, and the AI-voices disclosure. **Import a brand guide** takes a PDF, a web page (.html) or a whole project folder zipped up (.zip), such as a design-system export with its stylesheets, font files and logos. The studio reads the colours, colour tokens, fonts and logo candidates in your browser, the AI fits them to the stage, and any font files and the best logo for a dark background are uploaded for you. Nothing inside the files is run. **Undo import** puts the previous brand back. Without the online studio, HTML and zip imports still work from the names in the code; PDFs need the AI.
 
 The music in `public/defaults` was composed for this project and is free to use. Replace it with your own whenever you like.
 

@@ -1,5 +1,6 @@
 // Builds a single self-contained HTML file: the player script, episode data, images, fonts and audio.
 
+import { faceWeight } from "../render/fonts";
 import type { Character, Show } from "../../shared/types";
 import type { PlayerData } from "../../player/main";
 import type { Production } from "../engine";
@@ -50,11 +51,11 @@ export async function buildInteractiveHtml(prod: Production, mp3: Blob, envelope
   const qr = show.endCard.showQr && show.endCard.url ? await QRCode.toDataURL(show.endCard.url, { margin: 0, width: 512, color: { dark: "#0B191C", light: "#FFFFFF" } }) : undefined;
   const fonts = show.brand.fonts;
   const google = [...new Set([fonts.display, fonts.body, fonts.mono].filter((f) => f.source === "google").map((f) => f.family))];
-  const uploads: { family: string; url: string }[] = [];
+  const uploads: { family: string; url: string; weight: string }[] = [];
   for (const f of [fonts.display, fonts.body, fonts.mono]) {
     if (f.source === "upload" && f.assetPath) {
       const url = await fileDataUrl(f.assetPath);
-      if (url) uploads.push({ family: f.family, url });
+      if (url) uploads.push({ family: f.family, url, weight: faceWeight(f) });
     }
   }
   const script = { ...m.script, lines: m.script.lines.map((l) => ({ ...l, audio: null })), anonymisation: [], flags: [], social: null };

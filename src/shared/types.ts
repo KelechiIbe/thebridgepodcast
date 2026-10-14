@@ -40,6 +40,9 @@ export interface FontChoice {
   source: "google" | "upload" | "system";
   /** For uploaded fonts: storage path of the font file. */
   assetPath?: string | null;
+  /** For uploaded fonts: the weight (or range, for variable fonts) the file holds, when known. */
+  weight?: number;
+  weightMax?: number;
 }
 
 export type SceneKind = "bridge" | "gradient" | "grid" | "image" | "plain";
