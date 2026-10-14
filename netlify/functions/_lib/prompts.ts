@@ -178,7 +178,7 @@ ${lines}`,
 export const BRAND_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["palette", "displayFont", "bodyFont", "monoFont", "wordmark", "byline", "notes"],
+  required: ["palette", "displayFont", "bodyFont", "monoFont", "logoFile", "wordmark", "byline", "notes"],
   properties: {
     palette: {
       type: "object",
@@ -189,16 +189,24 @@ export const BRAND_SCHEMA = {
     displayFont: { type: "string" },
     bodyFont: { type: "string" },
     monoFont: { type: "string" },
+    logoFile: { type: "string" },
     wordmark: { type: "string" },
     byline: { type: "string" },
     notes: { type: "string" },
   },
 };
 
-export function brandPrompt(guideText: string, candidates: string[]) {
+export function brandPrompt(guideText: string, candidates: string[], kit?: { fonts?: string[]; logos?: string[] }) {
+  const fonts = (kit?.fonts ?? []).filter(Boolean);
+  const logos = (kit?.logos ?? []).filter(Boolean);
   return {
-    system: `You turn a brand guide into settings for a video podcast stage. The stage is dark by default: bg and bg2 are deep background tones, ink is the main text colour (must read clearly on bg, contrast 7:1 or better), dim is secondary text (4.5:1 or better), accent is the brand colour for the wordmark and big numbers, accent2 a second brand colour, good/bad/mid are for comparison bars (bad reads as warning). Use hex #RRGGBB only. Pick fonts that exist on Google Fonts; if the guide names a font that is not on Google Fonts, pick the closest Google Font and say so in notes. Return JSON only.`,
-    user: `Colours found in the guide's pages (most common first): ${candidates.join(", ") || "none"}\n\nGuide text:\n${guideText.slice(0, 60_000)}`,
+    system: `You turn a brand guide into settings for a video podcast stage. The guide may be a PDF, a web page, or a whole project folder with stylesheets, colour tokens and font files. The stage is dark by default: bg and bg2 are deep background tones, ink is the main text colour (must read clearly on bg, contrast 7:1 or better), dim is secondary text (4.5:1 or better), accent is the brand colour for the wordmark and big numbers, accent2 a second brand colour, good/bad/mid are for comparison bars (bad reads as warning). Use hex #RRGGBB only, and prefer the exact colours the guide defines. Fonts: if a font in the "Font files included" list fits a role, use its name exactly as written there, because the studio will load that file. Otherwise pick fonts that exist on Google Fonts; if the guide names a font that is not on Google Fonts and has no file, pick the closest Google Font and say so in notes. logoFile: the one path from the "Logo files" list that will read best on the dark stage (a white, light or reversed version beats a dark one), or an empty string if there is no list. Return JSON only.`,
+    user: `Colours found in the guide (most common first): ${candidates.join(", ") || "none"}
+Font files included: ${fonts.join(", ") || "none"}
+Logo files: ${logos.join(", ") || "none"}
+
+Guide text:
+${guideText.slice(0, 60_000)}`,
   };
 }
 

@@ -12,7 +12,7 @@ export interface PlayerData {
   model: Omit<StageModel, "images">;
   images: { logo?: string; background?: string; qr?: string; portraits: Record<string, string>; cards: Record<string, string> };
   audio: string;
-  fonts: { google: string[]; uploads: { family: string; url: string }[] };
+  fonts: { google: string[]; uploads: { family: string; url: string; weight?: string }[] };
   showName: string;
   tagline: string;
   disclosure: string;
@@ -28,7 +28,20 @@ const el = <K extends keyof HTMLElementTagNameMap>(tag: K, cls?: string, text?: 
 async function bitmap(url?: string): Promise<ImageBitmap | null> {
   if (!url) return null;
   try {
-    return await createImageBitmap(await (await fetch(url)).blob());
+    const blob = await (await fetch(url)).blob();
+    try {
+      return await createImageBitmap(blob);
+    } catch {
+      // SVG: let an <img> decode it, then copy it onto a canvas
+      const img = new Image();
+      img.src = url;
+      await img.decode();
+      const c = document.createElement("canvas");
+      c.width = img.naturalWidth || 1000;
+      c.height = img.naturalHeight || 1000;
+      c.getContext("2d")!.drawImage(img, 0, 0, c.width, c.height);
+      return await createImageBitmap(c);
+    }
   } catch {
     return null;
   }
@@ -49,7 +62,7 @@ async function boot(data: PlayerData) {
   }
   for (const f of data.fonts.uploads) {
     try {
-      const face = new FontFace(f.family, `url(${f.url})`);
+      const face = new FontFace(f.family, `url(${f.url})`, { weight: f.weight ?? "100 900" });
       document.fonts.add(await face.load());
     } catch {
       /* fall back to system fonts */

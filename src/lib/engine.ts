@@ -7,6 +7,7 @@ import { hashString, toSpoken } from "../shared/pronounce";
 import { decodeAudio, mixEpisode, ENV_FPS, type MixResult } from "./audio/mixer";
 import type { StageImages, StageModel } from "./render/stage";
 import { store } from "./store";
+import { blobToBitmap } from "./assets";
 import QRCode from "qrcode";
 
 export const DEFAULT_MUSIC: Record<MusicSlot, string> = {
@@ -70,7 +71,7 @@ export function loadImage(path: string | null | undefined): Promise<ImageBitmap 
   if (!p) {
     p = store
       .download(path)
-      .then((b) => createImageBitmap(b))
+      .then((b) => blobToBitmap(b))
       .catch(() => null);
     imageCache.set(path, p);
   }

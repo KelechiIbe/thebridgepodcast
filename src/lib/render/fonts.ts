@@ -1,7 +1,17 @@
-import type { Brand } from "../../shared/types";
+import type { Brand, FontChoice } from "../../shared/types";
 import { store } from "../store";
 
 const loadedLinks = new Set<string>();
+
+/**
+ * The weight an uploaded font file is registered at. A file of known weight keeps it, so a bold
+ * headline face and a regular text face of the same family can sit side by side; a file of
+ * unknown weight covers every weight, so the browser never fakes bold on top of it.
+ */
+export function faceWeight(f: Pick<FontChoice, "weight" | "weightMax">): string {
+  if (!f.weight) return "100 900";
+  return f.weightMax && f.weightMax !== f.weight ? `${f.weight} ${f.weightMax}` : String(f.weight);
+}
 const loadedFaces = new Set<string>();
 
 /** Makes sure the brand's fonts are ready before drawing text on the canvas. */
@@ -25,7 +35,7 @@ export async function ensureFonts(brand: Brand): Promise<void> {
     if (f.source !== "upload" || !f.assetPath || loadedFaces.has(f.family + f.assetPath)) continue;
     try {
       const url = await store.fileUrl(f.assetPath);
-      const face = new FontFace(f.family, `url(${url})`);
+      const face = new FontFace(f.family, `url(${url})`, { weight: faceWeight(f) });
       document.fonts.add(await face.load());
       loadedFaces.add(f.family + f.assetPath);
     } catch {
