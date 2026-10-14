@@ -58,7 +58,7 @@ export const api = {
   saveKey: (name: string, value: string) => call<Record<string, { set: boolean; last4: string; source: string }>>("keys", { method: "POST", body: JSON.stringify({ name, value }) }),
   testKey: (name: string) => call<{ message: string }>("keys", { method: "POST", body: JSON.stringify({ action: "test", name }) }),
   team: () => call<{ members: { id: string; email: string; fullName: string; role: string }[] }>("team"),
-  teamAction: (b: { action: "invite" | "role" | "remove"; email?: string; fullName?: string; role?: string; userId?: string }) =>
+  teamAction: (b: { action: "invite" | "create" | "password" | "role" | "remove"; email?: string; fullName?: string; role?: string; userId?: string; password?: string }) =>
     call<{ ok: boolean }>("team", { method: "POST", body: JSON.stringify(b) }),
 };
 

@@ -217,6 +217,15 @@ drop policy if exists "members read" on public.usage_log;
 create policy "members read" on public.usage_log for select using (public.is_member());
 -- secrets: intentionally no policies (service role only)
 
+-- Table privileges. Supabase normally grants these by default; stating them keeps the
+-- studio working on projects created with the Data API's automatic grants switched off.
+grant usage on schema public to anon, authenticated, service_role;
+grant select, insert, update, delete on all tables in schema public to authenticated, service_role;
+grant usage, select on all sequences in schema public to authenticated, service_role;
+grant execute on function public.is_member(), public.has_role(text[]) to anon, authenticated, service_role;
+revoke all on public.secrets from anon, authenticated;
+revoke all on all tables in schema public from anon;
+
 -- ---------- storage ----------
 insert into storage.buckets (id, name, public)
 values ('media', 'media', false)

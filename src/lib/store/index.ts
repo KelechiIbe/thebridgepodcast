@@ -6,7 +6,8 @@ import sample from "../../shared/sampleEpisode.json";
 import type { Episode } from "../../shared/types";
 
 const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// Supabase's newer "publishable" key, or the older "anon" key; either works
+const anon = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env.VITE_SUPABASE_ANON_KEY) as string | undefined;
 
 export const store: DataStore = url && anon ? new SupabaseStore(url, anon) : new LocalStore();
 

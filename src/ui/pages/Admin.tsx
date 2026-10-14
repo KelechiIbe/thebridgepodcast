@@ -3,6 +3,7 @@ import type { AiProvider, Role } from "../../shared/types";
 import { api, serverAvailable } from "../../lib/api";
 import { store } from "../../lib/store";
 import { useApp } from "../ctx";
+import { Modal } from "../components/Modal";
 
 const ROLE_HELP: Record<Role, string> = {
   admin: "Everything, including team, keys and settings",
@@ -10,12 +11,28 @@ const ROLE_HELP: Record<Role, string> = {
   reviewer: "Reads, comments and approves episodes",
 };
 
+// readable temporary passwords: no 0/O or 1/l mix-ups when read out over the phone
+function makePassword() {
+  const chars = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes = crypto.getRandomValues(new Uint8Array(12));
+  return Array.from(bytes, (b) => chars[b % chars.length]).join("");
+}
+
 export function Team() {
   const app = useApp();
   const [members, setMembers] = useState<{ id: string; email: string; fullName: string; role: string }[] | null>(null);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState<Role>("producer");
+  const [how, setHow] = useState<"password" | "email">("password");
+  const [password, setPassword] = useState(makePassword);
+  const [added, setAdded] = useState<{ email: string; password: string } | null>(null);
+  const [resetFor, setResetFor] = useState<{ id: string; email: string; password: string; done?: boolean } | null>(null);
+  const copy = (text: string) =>
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => app.toast("Copied"))
+      .catch(() => app.toast("Couldn't copy. Select the text and copy it yourself.", true));
   const load = () => api.team().then((r) => setMembers(r.members)).catch((e) => app.toast(e.message, true));
   useEffect(() => {
     if (serverAvailable()) load();
@@ -27,15 +44,28 @@ export function Team() {
       await api.teamAction(b);
       app.toast(done);
       load();
+      return true;
     } catch (e) {
       app.toast((e as Error).message, true);
+      return false;
     }
+  };
+  const addPerson = async () => {
+    const ok =
+      how === "password"
+        ? await act({ action: "create", email, fullName: name, role, password }, `${email} can sign in now`)
+        : await act({ action: "invite", email, fullName: name, role }, `Invitation sent to ${email}`);
+    if (!ok) return;
+    if (how === "password") setAdded({ email, password });
+    setEmail("");
+    setName("");
+    setPassword(makePassword());
   };
   return (
     <div>
       <h1 className="page">Team</h1>
-      <p className="page-sub">Only people you invite can sign in. They get an email with a link to set their password.</p>
-      <div className="grid2" style={{ alignItems: "start" }}>
+      <p className="page-sub">Only people you add here can use the studio.</p>
+      <div className="stack">
         <div className="panel">
           <div className="table-wrap">
             <table className="table">
@@ -46,13 +76,20 @@ export function Team() {
                     <td>{m.fullName || "—"}</td>
                     <td>{m.email}</td>
                     <td>
-                      <select className="input" value={m.role} disabled={!app.can("admin")} onChange={(e) => act({ action: "role", userId: m.id, role: e.target.value }, "Role updated")} aria-label={`Role for ${m.email}`}>
+                      <select className="input" style={{ minWidth: 120 }} value={m.role} disabled={!app.can("admin")} onChange={(e) => act({ action: "role", userId: m.id, role: e.target.value }, "Role updated")} aria-label={`Role for ${m.email}`}>
                         <option value="admin">Admin</option>
                         <option value="producer">Producer</option>
                         <option value="reviewer">Reviewer</option>
                       </select>
                     </td>
-                    <td>{app.can("admin") && m.id !== app.user.id && <button className="btn ghost sm danger" onClick={() => confirm(`Remove ${m.email}?`) && act({ action: "remove", userId: m.id }, "Removed")}>Remove</button>}</td>
+                    <td>
+                      {app.can("admin") && (
+                        <div className="row" style={{ gap: 6, flexWrap: "nowrap" }}>
+                          <button className="btn ghost sm" onClick={() => setResetFor({ id: m.id, email: m.email, password: makePassword() })}>New password</button>
+                          {m.id !== app.user.id && <button className="btn ghost sm danger" onClick={() => confirm(`Remove ${m.email}?`) && act({ action: "remove", userId: m.id }, "Removed")}>Remove</button>}
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -60,8 +97,8 @@ export function Team() {
           </div>
         </div>
         {app.can("admin") && (
-          <form className="panel stack" onSubmit={(e) => { e.preventDefault(); act({ action: "invite", email, fullName: name, role }, `Invitation sent to ${email}`).then(() => { setEmail(""); setName(""); }); }}>
-            <h2 className="sec">Invite someone</h2>
+          <form className="panel stack" style={{ maxWidth: 640 }} onSubmit={(e) => { e.preventDefault(); addPerson(); }}>
+            <h2 className="sec">Add someone</h2>
             <label className="field">Email<input className="input" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></label>
             <label className="field">Name<input className="input" value={name} onChange={(e) => setName(e.target.value)} /></label>
             <label className="field">
@@ -70,8 +107,79 @@ export function Team() {
                 {(Object.keys(ROLE_HELP) as Role[]).map((r) => <option key={r} value={r}>{r[0].toUpperCase() + r.slice(1)}: {ROLE_HELP[r]}</option>)}
               </select>
             </label>
-            <button className="btn accent" style={{ justifySelf: "start" }}>Send invitation</button>
+            <fieldset className="stack tight" style={{ border: 0, padding: 0, margin: 0 }}>
+              <legend className="small muted" style={{ marginBottom: 6 }}>How they'll get in</legend>
+              <label className="check">
+                <input type="radio" name="how" checked={how === "password"} onChange={() => setHow("password")} />
+                I'll give them a temporary password
+              </label>
+              <label className="check">
+                <input type="radio" name="how" checked={how === "email"} onChange={() => setHow("email")} />
+                Email them an invitation link (only works once email sending is set up)
+              </label>
+            </fieldset>
+            {how === "password" && (
+              <label className="field">
+                Temporary password
+                <div className="row" style={{ flexWrap: "nowrap" }}>
+                  <input className="input" style={{ flex: 1 }} required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="off" />
+                  <button type="button" className="btn sm" onClick={() => setPassword(makePassword())}>New one</button>
+                </div>
+              </label>
+            )}
+            <button className="btn accent" style={{ justifySelf: "start" }}>{how === "password" ? "Add to the team" : "Send invitation"}</button>
+            {added && (
+              <div className="panel stack tight" style={{ background: "var(--panel2)" }}>
+                <b>Send these to {added.email}</b>
+                <span className="small">
+                  Studio: {location.origin}
+                  <br />
+                  Email: {added.email}
+                  <br />
+                  Temporary password: <code>{added.password}</code>
+                </span>
+                <span className="small muted">Ask them to change the password from the account link at the bottom left after they sign in.</span>
+                <div className="row">
+                  <button type="button" className="btn sm" onClick={() => copy(`The Bridge Studio: ${location.origin}\nEmail: ${added.email}\nTemporary password: ${added.password}`)}>Copy</button>
+                  <button type="button" className="btn ghost sm" onClick={() => setAdded(null)}>Done</button>
+                </div>
+              </div>
+            )}
           </form>
+        )}
+        {resetFor && (
+          <Modal title={`New password for ${resetFor.email}`} onClose={() => setResetFor(null)}>
+            <p className="small muted" style={{ margin: 0 }}>Use this when someone forgets their password. Their old one stops working straight away.</p>
+            {resetFor.done ? (
+              <>
+                <p style={{ margin: 0 }}>
+                  Done. Their new password is <code>{resetFor.password}</code>
+                </p>
+                <div className="row">
+                  <button className="btn" onClick={() => copy(resetFor.password)}>Copy it</button>
+                  <button className="btn ghost" onClick={() => setResetFor(null)}>Close</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="row" style={{ flexWrap: "nowrap" }}>
+                  <input className="input" style={{ flex: 1 }} value={resetFor.password} onChange={(e) => setResetFor({ ...resetFor, password: e.target.value })} aria-label="New password" autoComplete="off" />
+                  <button className="btn sm" onClick={() => setResetFor({ ...resetFor, password: makePassword() })}>New one</button>
+                </div>
+                <div className="row">
+                  <button
+                    className="btn accent"
+                    disabled={resetFor.password.length < 8}
+                    onClick={async () => {
+                      if (await act({ action: "password", userId: resetFor.id, password: resetFor.password }, "Password changed")) setResetFor({ ...resetFor, done: true });
+                    }}
+                  >
+                    Set this password
+                  </button>
+                </div>
+              </>
+            )}
+          </Modal>
         )}
       </div>
     </div>

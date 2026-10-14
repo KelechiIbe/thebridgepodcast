@@ -23,8 +23,8 @@ This takes about twenty minutes. You'll need a Supabase account, a Netlify accou
 
 1. Create a new project at [supabase.com](https://supabase.com). Pick the region closest to your team (London or Frankfurt work well from Lagos).
 2. Open **SQL Editor**, paste the whole of `supabase/migrations/0001_init.sql`, and run it. It creates the tables, the access rules and a private storage bucket called `media`. Running it twice is harmless.
-3. Under **Authentication → Sign In / Providers → Email**, switch off **Allow new users to sign up**. People join only when an admin invites them.
-4. From **Project Settings → API**, copy the project URL, the `anon` public key and the `service_role` secret key. The service role key can bypass every access rule, so it goes only into Netlify's environment variables, never into the code or the browser.
+3. Under **Authentication → Sign In / Providers → Email**, switch off **Allow new users to sign up**. People join only when an admin adds them.
+4. From **Project Settings → API Keys**, copy the **Publishable key** (it starts `sb_publishable_`) and the **Secret key** (it starts `sb_secret_`). The secret key can bypass every access rule, so it goes only into Netlify's environment variables, never into the code or the browser. Your project URL is on the project's home page and looks like `https://abcdefgh.supabase.co`.
 
 ### 2. Netlify
 
@@ -34,11 +34,12 @@ This takes about twenty minutes. You'll need a Supabase account, a Netlify accou
 | Variable | Value |
 | --- | --- |
 | `VITE_SUPABASE_URL` | the Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | the `anon` public key |
-| `SUPABASE_URL` | the Supabase project URL again (for the server functions) |
-| `SUPABASE_SERVICE_ROLE_KEY` | the `service_role` key |
-| `APP_SECRET` | a long random string; `openssl rand -base64 48` makes one |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | the publishable key |
+| `SUPABASE_SECRET_KEY` | the secret key |
+| `APP_SECRET` | a long random string, at least 32 characters |
 | `ELEVENLABS_API_KEY`, `ANTHROPIC_API_KEY`, `GEMINI_API_KEY` | optional; you can paste keys in the studio's Settings page instead |
+
+The older `anon` and `service_role` keys still work under the names `VITE_SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY`, but Supabase is retiring them.
 
 `APP_SECRET` encrypts the API keys you save in Settings. If you change it later, those saved keys stop working and you'll need to paste them again.
 
@@ -49,15 +50,21 @@ Background functions, which the script writer uses, are available on Netlify's f
 
 ### 3. The first admin
 
-In Supabase go to **Authentication → Users → Add user → Send invitation** and enter your own email. The first account the studio sees becomes the admin. Open the email, follow the link, and set a password from the account link at the bottom left of the studio. You can also sign in with an emailed link at any time, so the password is optional.
+In Supabase go to **Authentication → Users → Add user → Create new user**. Enter your own email and a password, leave **Auto Confirm User** ticked, and create the user. The first account the studio sees becomes the admin, so do this before anyone else has an account. Then open the Netlify address and sign in.
 
-Everyone else joins through the studio's **Team** page, where you choose their role:
+Everyone else joins through the studio's **Team** page. Enter their email and role, keep **I'll give them a temporary password** selected, and press **Add to the team**. The page shows the address, email and password to send them; they change the password from the account link at the bottom left after signing in. The roles are:
 
 * **Admin** manages the team, API keys and settings, and can do everything else.
 * **Producer** creates and edits episodes, characters, voices and the brand.
 * **Reviewer** reads, comments, runs checks and approves episodes.
 
-Accounts created any other way can sign in but see a "not on the team yet" page until an admin invites them.
+If someone forgets their password, an admin presses **New password** next to their name on the Team page.
+
+Accounts created any other way can sign in but see a "not on the team yet" page until an admin adds them.
+
+#### Email (optional)
+
+Supabase's built-in mailer only delivers to people who belong to your Supabase organisation, and only a few messages an hour. Emailed invitations, "email me a sign-in link" and "forgot password" emails therefore reach your team only after you connect an email service of your own (Resend, Brevo, Zoho Mail and most others work) under **Authentication → Emails → SMTP Settings** in Supabase. Everything else works without it.
 
 ### 4. Keys and voices
 

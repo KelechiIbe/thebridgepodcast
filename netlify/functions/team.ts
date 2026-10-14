@@ -12,7 +12,7 @@ export default handle(async (req) => {
     const { data } = await db.from("profiles").select("id, email, full_name, role, created_at").order("created_at");
     return json({ members: (data ?? []).map((p: any) => ({ id: p.id, email: p.email, fullName: p.full_name, role: p.role })) });
   }
-  const b = await body<{ action: string; email?: string; fullName?: string; role?: Role; userId?: string }>(req);
+  const b = await body<{ action: string; email?: string; fullName?: string; role?: Role; userId?: string; password?: string }>(req);
   if (b.action === "invite") {
     if (!b.email || !/^\S+@\S+\.\S+$/.test(b.email)) throw new HttpError(400, "Enter a valid email address.");
     const role = ROLES.includes(b.role as Role) ? b.role : "producer";
@@ -26,6 +26,30 @@ export default handle(async (req) => {
       const r = await db.from("profiles").upsert({ id: data.user.id, email: b.email.trim(), full_name: b.fullName ?? "", role });
       if (r.error) throw new HttpError(500, r.error.message);
     }
+    return json({ ok: true });
+  }
+  if (b.action === "create") {
+    // Adds someone with a temporary password, so no email has to be sent.
+    // Supabase's built-in mailer only reaches members of your Supabase organisation.
+    if (!b.email || !/^\S+@\S+\.\S+$/.test(b.email)) throw new HttpError(400, "Enter a valid email address.");
+    if (!b.password || b.password.length < 8) throw new HttpError(400, "The temporary password needs at least 8 characters.");
+    const role = ROLES.includes(b.role as Role) ? b.role : "producer";
+    const { data, error } = await db.auth.admin.createUser({
+      email: b.email.trim(),
+      password: b.password,
+      email_confirm: true,
+      user_metadata: { full_name: b.fullName ?? "" },
+    });
+    if (error) throw new HttpError(400, /already/i.test(error.message) ? "Someone with that email already has an account." : error.message);
+    const r = await db.from("profiles").upsert({ id: data.user.id, email: b.email.trim(), full_name: b.fullName ?? "", role });
+    if (r.error) throw new HttpError(500, r.error.message);
+    return json({ ok: true });
+  }
+  if (b.action === "password") {
+    if (!b.userId) throw new HttpError(400, "Pick a person.");
+    if (!b.password || b.password.length < 8) throw new HttpError(400, "The new password needs at least 8 characters.");
+    const { error } = await db.auth.admin.updateUserById(b.userId, { password: b.password });
+    if (error) throw new HttpError(400, error.message);
     return json({ ok: true });
   }
   if (b.action === "role") {
