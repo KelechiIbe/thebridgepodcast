@@ -4,6 +4,9 @@
 
 [build.environment]
   NODE_VERSION = "22"
+  # These two are public by design (the browser needs them), so Netlify's secret
+  # scanner shouldn't fail the build when it finds them in the published files.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_URL,VITE_SUPABASE_PUBLISHABLE_KEY,VITE_SUPABASE_ANON_KEY"
 
 [functions]
   directory = "netlify/functions"
