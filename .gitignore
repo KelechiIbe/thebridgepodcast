@@ -1,0 +1,10 @@
+node_modules
+dist
+.netlify
+.env
+.env.local
+*.log
+coverage
+public/player
+*.tsbuildinfo
+.DS_Store

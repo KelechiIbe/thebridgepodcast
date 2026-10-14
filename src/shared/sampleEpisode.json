@@ -1,0 +1,724 @@
+{
+ "id": "ep-sample-1",
+ "showId": "show-the-bridge",
+ "number": 1,
+ "title": "Your revenue is smaller than you think",
+ "status": "draft",
+ "sessionDate": "2026-10-09",
+ "notes": null,
+ "script": {
+  "title": "Your revenue is smaller than you think",
+  "summary": "VAT for travel agents, the ₦5 million penalty for using unregistered contractors, company versus business name, and how to clear a VAT backlog.",
+  "personas": [
+   {
+    "id": "p-funke",
+    "name": "Funke",
+    "role": "Runs a travel agency in Lekki",
+    "voiceCharacterId": "ch-listener-f",
+    "color": "#F5C518"
+   },
+   {
+    "id": "p-chinedu",
+    "name": "Chinedu",
+    "role": "Facilities manager, manufacturing company, Ota",
+    "voiceCharacterId": "ch-listener-m",
+    "color": "#7FD8B0"
+   }
+  ],
+  "lines": [
+   {
+    "id": "c1",
+    "speaker": "p-funke",
+    "kind": "voicenote",
+    "text": "If I add 7.5% VAT to a ₦3 million package, nobody will book it. Abeg, do I still have to pay VAT to government?",
+    "audio": null
+   },
+   {
+    "id": "i1",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Welcome to The Bridge, from TaxStreem. Every Friday, business owners bring their tax questions to our virtual open office, and on this show we replay the best ones.",
+    "audio": null
+   },
+   {
+    "id": "i2",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Before we start, a quick note. The voices you're hearing are AI-generated. The answers come from Kelechi Ibe, TaxStreem's co-founder and a licensed tax practitioner, from last Friday's session. We've changed names and details to protect the people who asked.",
+    "audio": null
+   },
+   {
+    "id": "i3",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Today we cover VAT for travel agents, a ₦5 million mistake procurement teams keep making, and whether a company really pays less tax than a business name.",
+    "audio": null
+   },
+   {
+    "id": "s1a",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Our first voice note is from Funke. She runs a small travel agency in Lekki.",
+    "audio": null
+   },
+   {
+    "id": "s1b",
+    "speaker": "p-funke",
+    "kind": "voicenote",
+    "text": "Good afternoon. Business is tough right now, and everybody is cutting prices. If a package to Zanzibar costs ₦3 million and I add 7.5% VAT on top, nobody will book it. Abeg, if I don't collect VAT from my customer, do I still have to pay VAT to government?",
+    "audio": null
+   },
+   {
+    "id": "s1c",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Thank you, Funke. This is exactly the kind of question we started these sessions for. Let me take it in two parts.",
+    "audio": null
+   },
+   {
+    "id": "s1d",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "First, whether you should be charging VAT at all. Under the Nigeria Tax Act, which took effect on the first of January 2026, a small business doesn't have to register for VAT, charge it, or file VAT returns. Small means your turnover for the year is ₦100 million or less, and your fixed assets are not more than 250 million. Until last year the line was 25 million, so the threshold has quadrupled.",
+    "audio": null
+   },
+   {
+    "id": "s1e",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "There's one exception. If you provide professional services, say you're a lawyer or an accountant, you don't count as a small business at all. You comply with VAT whatever your turnover.",
+    "audio": null
+   },
+   {
+    "id": "s1f",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Now the second part, and this is where I see travel agencies make mistakes. Your revenue is not the ₦3 million. The airline flies your customer and the hotel gives them a room. Your job is to connect the parties, and what you earn for that is your commission. Under IFRS 15, an agent recognises only that commission as revenue.",
+    "audio": null
+   },
+   {
+    "id": "s1g",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "So if your fee on that package is 10%, your revenue is ₦300,000. That changes two things. You're far less likely to cross the 100 million threshold in the first place. And once you do cross it, your VAT sits on your service fee alone. The airline and the hotel account for tax on their own part of the package.",
+    "audio": null
+   },
+   {
+    "id": "s1h",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "7.5% of 300,000 is ₦22,500. On the full package, you would have charged 225,000. Your customer will hardly notice the smaller figure.",
+    "audio": null
+   },
+   {
+    "id": "s1i",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "One warning, though. If you've already collected VAT from a customer, please pay it over. That money belongs to government, and if they come for it, you'll pay it back with interest and penalties.",
+    "audio": null
+   },
+   {
+    "id": "s1j",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Kelechi added one more point for anyone sitting below the threshold.",
+    "audio": null
+   },
+   {
+    "id": "s1k",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "You can still choose to charge VAT, and sometimes you should. Every time you buy a laptop, pay a consultant or fix the office generator, you pay VAT. That's your input VAT. When you charge VAT on your own sales, you deduct your input VAT and pay government only the difference.",
+    "audio": null
+   },
+   {
+    "id": "s1l",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Say in October you collect ₦1 million of VAT from customers and pay 500,000 on purchases. You remit 500,000. If you don't charge VAT at all, that 500,000 is just a cost that eats into your profit. And when your input VAT is bigger than your output VAT, government owes you the difference, and you can claim it back.",
+    "audio": null
+   },
+   {
+    "id": "s2a",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Next, a voice note from Chinedu, who manages facilities for a manufacturing company in Ota.",
+    "audio": null
+   },
+   {
+    "id": "s2b",
+    "speaker": "p-chinedu",
+    "kind": "voicenote",
+    "text": "Good evening sir. The best AC repair man we know runs a one-man shop. No CAC, no registration, nothing. He's cheaper than the big service companies, and his work is better. With this new tax law, can we keep using him if we just self-charge the VAT on his invoices?",
+    "audio": null
+   },
+   {
+    "id": "s2c",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Chinedu, I understand why you want to keep him. Self-charge solves a VAT problem, and your problem here is registration. Those are two different things.",
+    "audio": null
+   },
+   {
+    "id": "s2d",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "The Tax Administration Act says a company or statutory body that awards a contract to an unregistered person is liable to an administrative penalty of ₦5 million. Self-charging the VAT does nothing about that penalty.",
+    "audio": null
+   },
+   {
+    "id": "s2e",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "The fix is cheap. Ask him to register a business name with CAC. Once he does, he gets a Tax ID automatically, with no separate tax registration. Then you can keep giving him jobs at the same good price, and nobody is exposed.",
+    "audio": null
+   },
+   {
+    "id": "s3a",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Funke came back with a second question.",
+    "audio": null
+   },
+   {
+    "id": "s3b",
+    "speaker": "p-funke",
+    "kind": "voicenote",
+    "text": "Thank you sir, that one has cleared my head. My business is registered as a business name, and we've been trying to convert to a limited company. Everybody says a company pays less tax. Is it true?",
+    "audio": null
+   },
+   {
+    "id": "s3c",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "It depends on your numbers. A small company pays zero company income tax. But the money in the company is not your money. You still have to take it out, either as a salary, which is taxed as your personal income, or as dividends.",
+    "audio": null
+   },
+   {
+    "id": "s3d",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Let's use one example. Your turnover is just under 100 million, and your profit for the year is ₦60 million.",
+    "audio": null
+   },
+   {
+    "id": "s3e",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "As a small company, you pay no company income tax. You declare the 60 million as a dividend, the company deducts 10% withholding tax, which is ₦6 million, and that's the end of it. Run the same business as a business name, and the 60 million is taxed as your personal income on the new tax bands. Before any reliefs, that comes to about ₦12.9 million. So the company route saves you close to 7 million.",
+    "audio": null
+   },
+   {
+    "id": "s3f",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Now watch what happens once your turnover crosses 100 million. The company pays 30% income tax plus a 4% development levy, and you still deduct 10% on the dividend. On the same 60 million profit, that's over ₦24 million in tax. At that size, the business name comes out cheaper.",
+    "audio": null
+   },
+   {
+    "id": "s3g",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "And on cost, a small company doesn't need an external audit to file. A simple statement of profit and loss will do. So running a small company is cheaper than most people think.",
+    "audio": null
+   },
+   {
+    "id": "s4a",
+    "speaker": "ch-ada",
+    "kind": "letter",
+    "text": "Our last question came in writing before the session. It says: our VAT has been piling up for a while, and we're finally ready to face it. Where do we start?",
+    "audio": null
+   },
+   {
+    "id": "s4b",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Start by finding out what you actually owe. Get a consultant to work it out properly. Many businesses think they're sitting on a huge liability, and when you do the numbers, most of it turns out to be late filing penalties.",
+    "audio": null
+   },
+   {
+    "id": "s4c",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "If the amount is manageable, clear it and start on a clean slate. If it isn't, start complying from today, so the problem stops growing. And file this year's returns now. On Rev360, penalties and interest are calculated automatically the moment a return is late, and no tax officer can negotiate them away.",
+    "audio": null
+   },
+   {
+    "id": "s4d",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "If the tax office later sends you an assessment, a consultant can engage them on it. Negotiating an assessment through the proper process is legal. Paying a bribe to make it disappear is not, and I won't support that.",
+    "audio": null
+   },
+   {
+    "id": "s4e",
+    "speaker": "ch-kelechi",
+    "kind": "studio",
+    "text": "Here's why it matters. On Rev360, you cannot download a tax clearance certificate while any return is outstanding. I once had a client who needed his TCC within a week to get his fitness products onto the shelves of a big gym chain. Today there's no shortcut for that. If your filings aren't complete, the certificate won't come out, and the deal goes to whoever was ready.",
+    "audio": null
+   },
+   {
+    "id": "o1",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "That's the show. Every Friday at 4 p.m., TaxStreem runs a free virtual open office where you can bring your own tax questions. The link to register is in the description, and you can send your questions ahead of time.",
+    "audio": null
+   },
+   {
+    "id": "o2",
+    "speaker": "ch-ada",
+    "kind": "studio",
+    "text": "Every business is different, so treat today's answers as a starting point and speak to an adviser about your own situation. I'm Ada. See you next Friday on The Bridge.",
+    "audio": null
+   }
+  ],
+  "chapters": [
+   {
+    "id": "ch-cold",
+    "title": "Cold open",
+    "startLineId": "c1",
+    "cue": "none"
+   },
+   {
+    "id": "ch-welcome",
+    "title": "Welcome",
+    "startLineId": "i1",
+    "cue": "sting"
+   },
+   {
+    "id": "ch-vat",
+    "title": "VAT for travel agents",
+    "startLineId": "s1a",
+    "cue": "ident"
+   },
+   {
+    "id": "ch-reg",
+    "title": "The ₦5 million procurement mistake",
+    "startLineId": "s2a",
+    "cue": "ident"
+   },
+   {
+    "id": "ch-co",
+    "title": "Company or business name?",
+    "startLineId": "s3a",
+    "cue": "ident"
+   },
+   {
+    "id": "ch-back",
+    "title": "Clearing a VAT backlog",
+    "startLineId": "s4a",
+    "cue": "ident"
+   },
+   {
+    "id": "ch-out",
+    "title": "Sign-off",
+    "startLineId": "o1",
+    "cue": "outro"
+   }
+  ],
+  "cards": [
+   {
+    "id": "card-1",
+    "lineId": "i2",
+    "anchor": "AI-generated.",
+    "type": "note",
+    "big": "AI voices",
+    "label": "Answers by Kelechi Ibe",
+    "sub": "Names and details changed to protect the people who asked"
+   },
+   {
+    "id": "card-23",
+    "lineId": "s1b",
+    "anchor": "Good afternoon.",
+    "type": "quote",
+    "quote": "If I don't charge my customer VAT, do I still have to pay it?",
+    "attribution": "Funke asks"
+   },
+   {
+    "id": "card-2",
+    "lineId": "s1d",
+    "anchor": "₦100 million",
+    "type": "stat",
+    "big": "₦100m",
+    "label": "VAT small-business threshold",
+    "sub": "From 1 January 2026. Fixed assets must also be ₦250m or less."
+   },
+   {
+    "id": "card-3",
+    "lineId": "s1d",
+    "anchor": "line was 25 million",
+    "type": "shift",
+    "from": "₦25m",
+    "to": "₦100m",
+    "label": "The threshold quadrupled",
+    "sub": "2020 to 2025, then 2026 onwards"
+   },
+   {
+    "id": "card-4",
+    "lineId": "s1e",
+    "anchor": "professional services",
+    "type": "stat",
+    "big": "No threshold",
+    "label": "for professional services",
+    "sub": "Lawyers, accountants and similar licensed firms comply with VAT at any turnover"
+   },
+   {
+    "id": "card-5",
+    "lineId": "s1f",
+    "anchor": "IFRS 15",
+    "type": "stat",
+    "big": "IFRS 15",
+    "label": "An agent's revenue is its commission",
+    "sub": "The airline and the hotel book their own revenue"
+   },
+   {
+    "id": "card-6",
+    "lineId": "s1g",
+    "anchor": "₦300,000",
+    "type": "split",
+    "big": "₦300,000",
+    "total": 3000000,
+    "part": 300000,
+    "label": "Revenue on a ₦3m package",
+    "sub": "10% commission. The other ₦2.7m passes through to the airline and hotel.",
+    "partLabel": "revenue",
+    "restLabel": "passes through"
+   },
+   {
+    "id": "card-7",
+    "lineId": "s1h",
+    "anchor": "₦22,500",
+    "type": "bars",
+    "unit": "VAT charged",
+    "bars": [
+     {
+      "label": "On the full ₦3m package",
+      "value": 225000,
+      "tone": "bad"
+     },
+     {
+      "label": "On the ₦300k service fee",
+      "value": 22500,
+      "tone": "good"
+     }
+    ]
+   },
+   {
+    "id": "card-8",
+    "lineId": "s1i",
+    "anchor": "please pay it over.",
+    "type": "note",
+    "big": "Collected it? Remit it.",
+    "label": "VAT you collect belongs to government",
+    "sub": "Holding on to it adds interest and penalties"
+   },
+   {
+    "id": "card-9",
+    "lineId": "s1k",
+    "anchor": "your input VAT.",
+    "type": "formula",
+    "parts": [
+     "Output VAT",
+     "−",
+     "Input VAT",
+     "=",
+     "What you remit"
+    ],
+    "label": "VAT is charged on the difference"
+   },
+   {
+    "id": "card-10",
+    "lineId": "s1l",
+    "anchor": "You remit 500,000.",
+    "type": "formula",
+    "parts": [
+     "₦1,000,000",
+     "−",
+     "₦500,000",
+     "=",
+     "₦500,000"
+    ],
+    "label": "October: VAT collected minus VAT paid on purchases"
+   },
+   {
+    "id": "card-24",
+    "lineId": "s2b",
+    "anchor": "Good evening",
+    "type": "quote",
+    "quote": "Can we self-charge the VAT and keep using an unregistered repairman?",
+    "attribution": "Chinedu asks"
+   },
+   {
+    "id": "card-11",
+    "lineId": "s2d",
+    "anchor": "administrative penalty",
+    "type": "stat",
+    "big": "₦5,000,000",
+    "label": "Penalty for awarding a contract to an unregistered person",
+    "sub": "Nigeria Tax Administration Act 2025, s.100(2)",
+    "tone": "bad"
+   },
+   {
+    "id": "card-12",
+    "lineId": "s2e",
+    "anchor": "business name with CAC.",
+    "type": "steps",
+    "steps": [
+     "Register a business name with CAC",
+     "Tax ID is issued automatically",
+     "Keep contracting him legally"
+    ],
+    "label": "The cheap fix"
+   },
+   {
+    "id": "card-25",
+    "lineId": "s3b",
+    "anchor": "Thank you",
+    "type": "quote",
+    "quote": "Does a company really pay less tax than a business name?",
+    "attribution": "Funke asks"
+   },
+   {
+    "id": "card-13",
+    "lineId": "s3d",
+    "anchor": "₦60 million.",
+    "type": "stat",
+    "big": "₦60m profit",
+    "label": "Example: turnover just under ₦100m",
+    "sub": "All profit taken out by the owner"
+   },
+   {
+    "id": "card-14",
+    "lineId": "s3e",
+    "anchor": "₦6 million,",
+    "type": "bars",
+    "unit": "Total tax on ₦60m profit",
+    "bars": [
+     {
+      "label": "Small company · 10% dividend WHT",
+      "value": 6000000,
+      "tone": "good"
+     }
+    ],
+    "max": 24360000
+   },
+   {
+    "id": "card-15",
+    "lineId": "s3e",
+    "anchor": "₦12.9 million.",
+    "type": "bars",
+    "unit": "Total tax on ₦60m profit",
+    "bars": [
+     {
+      "label": "Small company · 10% dividend WHT",
+      "value": 6000000,
+      "tone": "good"
+     },
+     {
+      "label": "Business name · 2026 PIT bands, before reliefs",
+      "value": 12930000,
+      "tone": "mid"
+     }
+    ],
+    "max": 24360000
+   },
+   {
+    "id": "card-16",
+    "lineId": "s3f",
+    "anchor": "over ₦24 million",
+    "type": "bars",
+    "unit": "Total tax on ₦60m profit",
+    "bars": [
+     {
+      "label": "Small company · 10% dividend WHT",
+      "value": 6000000,
+      "tone": "good"
+     },
+     {
+      "label": "Business name · 2026 PIT bands, before reliefs",
+      "value": 12930000,
+      "tone": "mid"
+     },
+     {
+      "label": "Company above ₦100m · 30% CIT + 4% levy + 10% WHT",
+      "value": 24360000,
+      "tone": "bad"
+     }
+    ],
+    "max": 24360000
+   },
+   {
+    "id": "card-17",
+    "lineId": "s3g",
+    "anchor": "external audit",
+    "type": "stat",
+    "big": "No external audit",
+    "label": "for small companies filing their returns",
+    "sub": "A statement of profit and loss will do"
+   },
+   {
+    "id": "card-26",
+    "lineId": "s4a",
+    "anchor": "Our last",
+    "type": "quote",
+    "quote": "Our VAT has piled up for a while. Where do we start?",
+    "attribution": "Sent in before the session"
+   },
+   {
+    "id": "card-18",
+    "lineId": "s4b",
+    "anchor": "late filing penalties.",
+    "type": "note",
+    "big": "Size it first",
+    "label": "Most backlogs are mostly penalties",
+    "sub": "Have a consultant work out the real tax owed"
+   },
+   {
+    "id": "card-19",
+    "lineId": "s4c",
+    "anchor": "calculated automatically",
+    "type": "stat",
+    "big": "Automatic",
+    "label": "Rev360 penalties and interest",
+    "sub": "No tax officer can negotiate them away",
+    "tone": "bad"
+   },
+   {
+    "id": "card-20",
+    "lineId": "s4d",
+    "anchor": "proper process is legal.",
+    "type": "dodont",
+    "doText": "Negotiate an assessment through a consultant",
+    "dontText": "Pay a bribe to make it disappear"
+   },
+   {
+    "id": "card-21",
+    "lineId": "s4e",
+    "anchor": "tax clearance certificate",
+    "type": "stat",
+    "big": "No TCC",
+    "label": "while any return is outstanding",
+    "sub": "Rev360 will not release the certificate"
+   },
+   {
+    "id": "card-22",
+    "lineId": "o1",
+    "anchor": "Every Friday",
+    "type": "cta",
+    "big": "Fridays · 4 p.m. WAT",
+    "label": "Free virtual open office",
+    "sub": "Bring your own tax questions"
+   }
+  ],
+  "polls": [
+   {
+    "id": "poll-1",
+    "afterLineId": "s1b",
+    "question": "Say Funke is above the threshold. What should she charge VAT on?",
+    "options": [
+     "The full ₦3m package",
+     "Only her service fee",
+     "Nothing. Travel is exempt."
+    ],
+    "answer": 1,
+    "why": "As an agent, her revenue is her commission. The airline and hotel handle tax on their own part."
+   },
+   {
+    "id": "poll-2",
+    "afterLineId": "s2b",
+    "question": "Does self-charging VAT protect Chinedu's company from the penalty?",
+    "options": [
+     "Yes, self-charge covers it",
+     "No, the penalty is about registration"
+    ],
+    "answer": 1,
+    "why": "Self-charge deals with VAT. The ₦5m penalty is for contracting someone with no registration."
+   },
+   {
+    "id": "poll-3",
+    "afterLineId": "s3b",
+    "question": "Turnover just under ₦100m, profit ₦60m. Which structure pays less tax?",
+    "options": [
+     "Small company",
+     "Business name",
+     "About the same"
+    ],
+    "answer": 0,
+    "why": "₦6m in dividend withholding tax against about ₦12.9m of personal income tax."
+   },
+   {
+    "id": "poll-4",
+    "afterLineId": "s4a",
+    "question": "On Rev360, which of these can be negotiated?",
+    "options": [
+     "Late-filing penalties and interest",
+     "The tax in an assessment, through proper process",
+     "Neither"
+    ],
+    "answer": 1,
+    "why": "Penalties and interest are automatic. The assessed tax can be engaged on legally."
+   }
+  ],
+  "widgets": [
+   {
+    "id": "w-1",
+    "type": "vat-commission"
+   },
+   {
+    "id": "w-2",
+    "type": "company-vs-bn"
+   }
+  ],
+  "anonymisation": [
+   {
+    "original": "Attendee from a travel and tours company",
+    "replacement": "Funke, travel agency in Lekki",
+    "kind": "person",
+    "note": "Destination, package price and revenue history changed."
+   },
+   {
+    "original": "Attendee asking about unregistered repair contractors",
+    "replacement": "Chinedu, facilities manager in Ota",
+    "kind": "person",
+    "note": "Industry and city invented."
+   },
+   {
+    "original": "Consultant's question on company vs business name",
+    "replacement": "Folded into Funke's second question",
+    "kind": "other",
+    "note": "Merged so no single attendee is identifiable."
+   },
+   {
+    "original": "Pre-session written question on VAT arrears",
+    "replacement": "Read out by the host, unattributed",
+    "kind": "other",
+    "note": ""
+   }
+  ],
+  "flags": [
+   {
+    "id": "flag-1",
+    "lineId": "s3e",
+    "claim": "About ₦12.9 million on ₦60 million profit as a business name",
+    "issue": "In the session the figure given was about ₦9.6 million, which follows the old PITA bands and allowances.",
+    "suggestion": "Updated to the 2026 bands: ₦12.93m before reliefs.",
+    "severity": "warn",
+    "resolved": true
+   },
+   {
+    "id": "flag-2",
+    "lineId": "s3g",
+    "claim": "A small company doesn't need an external audit to file",
+    "issue": "Not in the facts library.",
+    "suggestion": "Confirm the Nigeria Tax Administration Act provision before publishing.",
+    "severity": "warn",
+    "resolved": false
+   }
+  ],
+  "social": null
+ },
+ "approval": null,
+ "job": null,
+ "createdAt": "2026-10-14T12:00:00.000Z",
+ "updatedAt": "2026-10-14T12:00:00.000Z"
+}
