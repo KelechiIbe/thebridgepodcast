@@ -4,13 +4,48 @@ import type { DataStore, Version } from "./types";
 
 const BUCKET = "media";
 
+let skewSeconds = 0;
+/** How far this computer's clock is from Supabase's, in seconds. Positive means the computer is ahead. */
+export const clockSkew = () => skewSeconds;
+
+/**
+ * Supabase stamps each sign-in with an expiry in the server's time, and the browser compares it
+ * with its own clock. On a computer whose clock is an hour fast (often a wrong time zone), every
+ * token looks expired the moment it arrives, so the browser renews it in a loop until Supabase
+ * blocks it and the session drops. Restating the expiry in the computer's own time keeps sign-in
+ * working whatever the clock says.
+ */
+const clockSafeFetch: typeof fetch = async (input, init) => {
+  const res = await fetch(input, init);
+  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+  if (!res.ok || !/\/auth\/v1\/(token|verify|callback)/.test(url) || !(res.headers.get("content-type") ?? "").includes("json")) return res;
+  try {
+    const body = await res.clone().json();
+    if (body && typeof body.expires_in === "number" && typeof body.expires_at === "number") {
+      const now = Math.floor(Date.now() / 1000);
+      skewSeconds = now - (body.expires_at - body.expires_in);
+      body.expires_at = now + body.expires_in;
+      const headers = new Headers(res.headers);
+      headers.delete("content-length");
+      headers.delete("content-encoding");
+      return new Response(JSON.stringify(body), { status: res.status, statusText: res.statusText, headers });
+    }
+  } catch {
+    /* leave the response as it was */
+  }
+  return res;
+};
+
 export class SupabaseStore implements DataStore {
   readonly mode = "supabase" as const;
   readonly sb: SupabaseClient;
   private signed = new Map<string, { url: string; exp: number }>();
 
   constructor(url: string, anonKey: string) {
-    this.sb = createClient(url, anonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+    this.sb = createClient(url, anonKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+      global: { fetch: clockSafeFetch },
+    });
   }
 
   private check<T>(r: { data: T; error: { message: string } | null } | { data: any; error: any }): T {
@@ -23,9 +58,21 @@ export class SupabaseStore implements DataStore {
     const { data } = await this.sb.auth.getSession();
     const user = data.session?.user;
     if (!user) return null;
-    const p = await this.sb.from("profiles").select("id, email, full_name, role").eq("id", user.id).maybeSingle();
-    if (!p.data) return { id: user.id, email: user.email ?? "", fullName: "", role: "reviewer", outsider: true };
-    return { id: p.data.id, email: p.data.email, fullName: p.data.full_name, role: p.data.role };
+    // "Not on the team" only when the profile lookup worked and found nothing. A failed lookup
+    // (network, an expired session) is retried, then reported as a connection problem.
+    let problem = "";
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const p = await this.sb.from("profiles").select("id, email, full_name, role").eq("id", user.id).maybeSingle();
+      if (!p.error) {
+        if (!p.data) return { id: user.id, email: user.email ?? "", fullName: "", role: "reviewer", outsider: true };
+        return { id: p.data.id, email: p.data.email, fullName: p.data.full_name, role: p.data.role };
+      }
+      problem = p.error.message;
+      const again = await this.sb.auth.getSession();
+      if (!again.data.session) return null;
+      await new Promise((r) => setTimeout(r, 700 * (attempt + 1)));
+    }
+    throw new Error(problem || "The studio couldn't load your account.");
   }
   async signIn(email: string, password: string) {
     this.check(await this.sb.auth.signInWithPassword({ email, password }));
@@ -44,10 +91,13 @@ export class SupabaseStore implements DataStore {
   async signOut() {
     await this.sb.auth.signOut();
   }
-  onAuthChange(cb: () => void) {
+  onAuthChange(cb: (event?: string) => void) {
     const { data } = this.sb.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") location.hash = "#/account";
-      cb();
+      // A renewed token doesn't change who is signed in, so it needs no re-check. The check runs
+      // after this callback returns, because calling back into Supabase from inside it can stall.
+      if (event === "TOKEN_REFRESHED" || event === "INITIAL_SESSION") return;
+      setTimeout(() => cb(event), 0);
     });
     return () => data.subscription.unsubscribe();
   }
