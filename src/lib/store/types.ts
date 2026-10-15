@@ -17,7 +17,7 @@ export interface DataStore {
   sendPasswordReset(email: string): Promise<void>;
   updatePassword(password: string): Promise<void>;
   signOut(): Promise<void>;
-  onAuthChange(cb: () => void): () => void;
+  onAuthChange(cb: (event?: string) => void): () => void;
   /** Bearer token for the server functions. */
   token(): Promise<string | null>;
 

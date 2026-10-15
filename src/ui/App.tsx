@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Profile } from "../shared/types";
 import { store, ensureSeed } from "../lib/store";
+import { clockSkew } from "../lib/store/supabase";
 import { AppProvider, useApp, useHashRoute } from "./ctx";
 import { Episodes } from "./pages/Episodes";
 import { EpisodePage } from "./episode/EpisodePage";
@@ -13,10 +14,23 @@ export function App() {
   const [user, setUser] = useState<Profile | null | undefined>(undefined);
   const [seeded, setSeeded] = useState(false);
   const [seedError, setSeedError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const check = () =>
+    store.currentUser().then(
+      (u) => {
+        setLoadError(null);
+        setUser(u);
+      },
+      (e) => setLoadError((e as Error).message),
+    );
   useEffect(() => {
-    const check = () => store.currentUser().then(setUser);
     check();
-    return store.onAuthChange(check);
+    return store.onAuthChange((event) => {
+      // show "Loading…" rather than the sign-in form while a fresh sign-in loads the account
+      if (event === "SIGNED_IN") setUser((u) => (u === null ? undefined : u));
+      check();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!user || user.outsider) return;
@@ -26,6 +40,20 @@ export function App() {
       })
       .finally(() => setSeeded(true));
   }, [user]);
+  if (loadError)
+    return (
+      <div className="login">
+        <div className="panel stack">
+          <h2 className="sec">The studio couldn't load your account</h2>
+          <p style={{ margin: 0 }}>Check your internet connection and try again. If it keeps happening, sign out and back in.</p>
+          <p className="small muted" style={{ margin: 0 }}>{loadError}</p>
+          <div className="row">
+            <button className="btn primary" onClick={() => { setLoadError(null); check(); }}>Try again</button>
+            <button className="btn" onClick={() => store.signOut().then(() => { setLoadError(null); setUser(null); })}>Sign out</button>
+          </div>
+        </div>
+      </div>
+    );
   if (user === undefined) return <div className="login"><p className="muted">Loading…</p></div>;
   if (user === null) return <Login />;
   if (user.outsider)
@@ -88,6 +116,7 @@ function Shell() {
             Demo mode: work is saved in this browser only, and AI writing and voices are switched off. Connect Supabase and Netlify (see the README) to turn on the full studio for your team.
           </div>
         )}
+        <ClockNotice />
         {section === "" && <Episodes />}
         {section === "episode" && route[1] && <EpisodePage id={route[1]} tab={route[2]} />}
         {section === "characters" && <Characters />}
@@ -136,6 +165,22 @@ function Login() {
         {msg && <p className="small" style={{ margin: 0, color: msg.error ? "var(--bad)" : undefined }} role="status">{msg.text}</p>}
         <p className="small muted" style={{ margin: 0 }}>No account? Ask a studio admin to invite you.</p>
       </form>
+    </div>
+  );
+}
+
+/** The studio copes with a wrong computer clock, but other sites won't, so say so once. */
+function ClockNotice() {
+  const [hidden, setHidden] = useState(false);
+  const skew = clockSkew();
+  if (hidden || Math.abs(skew) < 300) return null;
+  const mins = Math.round(Math.abs(skew) / 60);
+  const size = mins >= 90 ? `about ${Math.round(mins / 60)} hours` : mins >= 50 ? "about an hour" : `about ${mins} minutes`;
+  return (
+    <div className="demo-banner" role="status">
+      This computer's clock is {size} {skew > 0 ? "fast" : "slow"}. The studio works around it, but please turn on automatic date and time and check that the
+      time zone is Lagos.{" "}
+      <button className="btn ghost sm" onClick={() => setHidden(true)}>Hide</button>
     </div>
   );
 }
