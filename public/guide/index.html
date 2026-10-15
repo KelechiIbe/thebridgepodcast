@@ -1,0 +1,1719 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<!-- The Bridge Studio user guide. Edit this file directly; see "Keeping this guide current" near the end. -->
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Bridge Studio User Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: the studio's own frame. A sticky contents rail on the left, a reading column of about 68 characters,
+   screenshots allowed to run wider than the text, numbered pins on every screenshot that match a legend below it. */
+:root {
+  --bg: #f2f4f1;
+  --panel: #ffffff;
+  --panel2: #f7f8f6;
+  --ink: #132123;
+  --muted: #5a6a68;
+  --line: #d9dfdb;
+  --accent: #9a7200;
+  --accent-fill: #f5c518;
+  --on-accent: #0b191c;
+  --good: #1d7f55;
+  --warn: #a8670b;
+  --bad: #b8432a;
+  --focus: #1d6fd1;
+  --tint: color-mix(in srgb, var(--accent-fill) 16%, var(--panel));
+  --tint-line: color-mix(in srgb, var(--accent-fill) 55%, var(--line));
+  --warn-tint: color-mix(in srgb, var(--bad) 9%, var(--panel));
+  --warn-line: color-mix(in srgb, var(--bad) 35%, var(--line));
+  --pin-fill: #f5c518;
+  --pin-ink: #0b191c;
+  --pin-ring: #0b191c;
+  --scrim: rgba(6, 14, 16, 0.86);
+  --display: "Big Shoulders Display", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --radius: 10px;
+  --head-h: 64px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0a1416; --panel: #111e21; --panel2: #0e191c; --ink: #e8eeea; --muted: #94a6a3; --line: #23363a;
+    --accent: #f5c518; --good: #4ccb92; --warn: #f0b04a; --bad: #ff7b5c; --focus: #6aa8ff;
+    --scrim: rgba(2, 7, 8, 0.9);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0a1416; --panel: #111e21; --panel2: #0e191c; --ink: #e8eeea; --muted: #94a6a3; --line: #23363a;
+  --accent: #f5c518; --good: #4ccb92; --warn: #f0b04a; --bad: #ff7b5c; --focus: #6aa8ff;
+  --scrim: rgba(2, 7, 8, 0.9);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-padding-top: calc(var(--head-h) + 20px + env(safe-area-inset-top, 0px)); }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-text-size-adjust: 100%;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--accent); text-underline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+img { max-width: 100%; height: auto; display: block; }
+mark { background: color-mix(in srgb, var(--accent-fill) 55%, transparent); color: inherit; border-radius: 2px; padding: 0 1px; }
+
+/* ---------- header ---------- */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.top-in { max-width: 1260px; margin: 0 auto; min-height: var(--head-h); display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.wm { display: grid; gap: 1px; text-decoration: none; margin-right: 6px; }
+.wm b { font: 900 26px/0.9 var(--display); text-transform: uppercase; color: var(--accent); letter-spacing: .01em; }
+.wm span { font: 500 10.5px/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.search { position: relative; flex: 1 1 260px; min-width: 0; max-width: 520px; }
+.search input {
+  width: 100%; height: 40px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel);
+  padding: 0 44px 0 16px; font-size: 15px;
+}
+.search input::placeholder { color: var(--muted); }
+.search kbd { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.results {
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: 0 18px 40px -18px rgba(0,0,0,.35); max-height: min(70vh, 520px); overflow: auto; padding: 6px;
+}
+.results a { display: grid; gap: 2px; padding: 9px 10px; border-radius: 8px; text-decoration: none; color: var(--ink); }
+.results a:hover, .results a.on { background: var(--panel2); }
+.results a small { font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.results a span { font-size: 14px; color: var(--muted); }
+.results a b { font-weight: 650; }
+.results .none { padding: 12px; color: var(--muted); font-size: 14px; }
+.tools { display: flex; gap: 8px; align-items: center; margin-left: auto; }
+.role { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+.role select, .btn {
+  height: 38px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); padding: 0 12px; cursor: pointer;
+}
+.btn { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; text-decoration: none; color: var(--ink); white-space: nowrap; }
+.btn:hover { border-color: var(--muted); }
+.btn.accent { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); }
+.btn.accent:hover { filter: brightness(.96); }
+.btn.sm { height: 30px; padding: 0 10px; font-size: 13px; }
+.btn.ghost { background: transparent; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.toc-btn { display: none; }
+.readbar { height: 3px; margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); }
+.readbar i { display: block; height: 100%; width: 0; background: var(--accent-fill); }
+
+/* ---------- layout ---------- */
+.layout { max-width: 1260px; margin: 0 auto; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 48px; padding-block: 28px 80px; }
+.toc { position: sticky; top: calc(var(--head-h) + 24px + env(safe-area-inset-top, 0px)); align-self: start; max-height: calc(100vh - var(--head-h) - 48px); overflow: auto; padding-right: 6px; font-size: 14px; }
+.toc h2 { font: 500 11px/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 18px 0 6px; }
+.toc .grp:first-child h2 { margin-top: 0; }
+.toc ol, .toc ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+.toc a { display: flex; gap: 8px; align-items: baseline; padding: 5px 10px; border-radius: 7px; color: var(--ink); text-decoration: none; line-height: 1.35; }
+.toc a:hover { background: var(--panel); }
+.toc a.on { background: var(--panel); box-shadow: inset 3px 0 0 var(--accent-fill); font-weight: 650; }
+.toc a i { font: 600 11px/1 var(--mono); color: var(--accent); font-style: normal; min-width: 14px; }
+.toc .rolebox { margin-top: 18px; padding: 12px; border: 1px dashed var(--line); border-radius: var(--radius); color: var(--muted); font-size: 13px; display: grid; gap: 8px; }
+.toc .rolebox label { font: 500 11px/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.toc .rolebox select { width: 100%; height: 36px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); padding: 0 8px; color: var(--ink); }
+.toc .rolebox p { margin: 0; }
+
+article { min-width: 0; }
+.prose { max-width: 70ch; }
+section.sec { padding-top: 34px; margin-top: 34px; border-top: 1px solid var(--line); }
+section.sec:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+.eyebrow { font: 500 11.5px/1.3 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.eyebrow .who { color: var(--accent); }
+h1, h2.h { font-family: var(--display); text-transform: uppercase; letter-spacing: .01em; text-wrap: balance; margin: 0; }
+h1 { font-weight: 900; font-size: clamp(48px, 9vw, 92px); line-height: .88; }
+h2.h { font-weight: 800; font-size: clamp(32px, 5vw, 46px); line-height: .95; margin: 6px 0 14px; }
+h3 { font-size: 19px; line-height: 1.3; margin: 30px 0 8px; text-wrap: balance; font-weight: 700; }
+h4 { font-size: 15px; margin: 18px 0 4px; }
+p { margin: 0 0 14px; }
+.lede { font-size: 19px; line-height: 1.55; color: var(--ink); max-width: 62ch; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+ul.plain, ol.plain { padding-left: 22px; margin: 0 0 16px; display: grid; gap: 6px; }
+ol.steps { list-style: none; padding: 0; margin: 0 0 18px; counter-reset: st; display: grid; gap: 10px; }
+ol.steps > li { counter-increment: st; display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 12px; align-items: start; }
+ol.steps > li::before { content: counter(st); font: 600 12px/28px var(--mono); text-align: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--line); background: var(--panel); color: var(--accent); }
+.ui { display: inline-block; font-weight: 600; font-size: .92em; line-height: 1.35; padding: 0 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); white-space: nowrap; }
+.ui.y { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 1px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); white-space: nowrap; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+.pill.ok::before { background: var(--good); }
+.pill.rv::before { background: var(--warn); }
+.pill.bad::before { background: var(--bad); }
+.pill.no::before { display: none; }
+kbd { font: 500 12px/1 var(--mono); padding: 3px 6px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; background: var(--panel2); color: var(--muted); }
+code { font: 500 .88em var(--mono); background: var(--panel2); border: 1px solid var(--line); border-radius: 5px; padding: 1px 5px; overflow-wrap: anywhere; }
+.new { font: 600 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; background: var(--accent-fill); color: var(--on-accent); padding: 4px 7px; border-radius: 999px; vertical-align: middle; }
+
+/* callouts */
+.call { border: 1px solid var(--tint-line); background: var(--tint); border-radius: var(--radius); padding: 14px 16px; margin: 18px 0; max-width: 70ch; }
+.call > b:first-child { display: block; font: 600 11px/1.2 var(--mono); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 6px; color: var(--accent); }
+.call p:last-child, .call ul:last-child { margin-bottom: 0; }
+.call.rule { border-color: var(--warn-line); background: var(--warn-tint); }
+.call.rule > b:first-child { color: var(--bad); }
+
+/* hero */
+.hero { display: grid; gap: 18px; padding-bottom: 8px; }
+.hero .meta { display: flex; gap: 14px; flex-wrap: wrap; color: var(--muted); font-size: 14px; }
+.flow { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; }
+.flow li { border-left: 1px solid var(--line); }
+.flow li:first-child { border-left: 0; }
+.flow a { display: grid; gap: 4px; padding: 14px 14px 16px; text-decoration: none; color: var(--ink); height: 100%; }
+.flow a:hover { background: var(--panel2); }
+.flow i { font: 600 11px/1 var(--mono); color: var(--accent); font-style: normal; letter-spacing: .1em; }
+.flow b { font: 800 22px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; }
+.flow span { font-size: 13.5px; color: var(--muted); line-height: 1.4; }
+.hero .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* screenshots */
+figure.shot { margin: 20px 0 26px; max-width: 100%; }
+figure.shot.narrow { max-width: 560px; }
+figure.shot.phone { max-width: 320px; }
+figure.shot.strip { max-width: 820px; }
+.frame { position: relative; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel2); cursor: zoom-in; }
+.frame img { width: 100%; }
+.frame .zoom { position: absolute; right: 8px; bottom: 8px; font: 600 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; background: var(--pin-ring); color: var(--pin-fill); padding: 6px 8px; border-radius: 6px; opacity: 0; transition: opacity .15s; pointer-events: none; }
+.frame:hover .zoom, .frame:focus-visible .zoom { opacity: .92; }
+.pin {
+  position: absolute; transform: translate(-50%, -50%); width: 22px; height: 22px; border-radius: 50%;
+  background: var(--pin-fill); color: var(--pin-ink); font: 700 11.5px/22px var(--mono); text-align: center;
+  box-shadow: 0 0 0 2px var(--pin-ring), 0 4px 10px rgba(0,0,0,.25); transition: transform .15s; z-index: 1;
+}
+.pin.hot { transform: translate(-50%, -50%) scale(1.3); z-index: 2; }
+.nopins .pin { display: none; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 10px; max-width: 70ch; }
+ol.legend { list-style: none; margin: 12px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 4px 18px; font-size: 14px; }
+ol.legend li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; align-items: start; padding: 3px 6px; border-radius: 6px; cursor: default; }
+ol.legend li.hot { background: var(--panel); }
+ol.legend li b { width: 20px; height: 20px; border-radius: 50%; background: var(--pin-fill); color: var(--pin-ink); font: 700 11px/20px var(--mono); text-align: center; margin-top: 1px; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px; align-items: start; }
+.gallery figure.shot { margin: 0; }
+
+/* tables */
+.table-wrap { overflow-x: auto; margin: 14px 0 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th { text-align: left; font: 500 11px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--panel2); white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.c, th.c { text-align: center; }
+.yes { color: var(--good); font-weight: 700; }
+.no { color: var(--muted); }
+
+/* copyable prompts */
+.prompts { display: grid; gap: 8px; margin: 12px 0 20px; max-width: 70ch; }
+.prompt { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 10px 10px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.prompt q { quotes: "\201C" "\201D"; font-size: 15px; }
+
+/* checklist */
+.check-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 6px 0 12px; }
+.meter { flex: 1 1 200px; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; max-width: 320px; }
+.meter i { display: block; height: 100%; width: 0; background: var(--good); transition: width .25s; }
+ol.checklist { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 8px; max-width: 76ch; }
+ol.checklist li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+ol.checklist li.done { background: var(--panel2); }
+ol.checklist li.done .t { text-decoration: line-through; text-decoration-color: var(--muted); color: var(--muted); }
+ol.checklist input { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--good); }
+ol.checklist label { display: grid; gap: 2px; cursor: pointer; }
+ol.checklist .t { font-weight: 600; }
+ol.checklist .d { font-size: 14px; color: var(--muted); }
+
+/* lifecycle */
+.life { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 14px 0 20px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel); }
+.life > div { padding: 12px 14px; border-left: 1px solid var(--line); display: grid; gap: 6px; align-content: start; }
+.life > div:first-child { border-left: 0; }
+.life p { font-size: 14px; color: var(--muted); margin: 0; }
+
+/* weekly rhythm */
+.week { list-style: none; padding: 0; margin: 14px 0 22px; display: grid; gap: 0; border-left: 2px solid var(--line); max-width: 72ch; }
+.week li { position: relative; padding: 0 0 16px 22px; }
+.week li::before { content: ""; position: absolute; left: -7px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent-fill); box-shadow: 0 0 0 3px var(--bg); }
+.week b { display: block; font: 600 12px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+
+/* demo */
+.demo { display: grid; gap: 14px; }
+.clock { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); position: sticky; top: calc(var(--head-h) + 10px + env(safe-area-inset-top, 0px)); z-index: 5; }
+.clock .big { font: 600 34px/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+.clock .of { color: var(--muted); font: 500 14px/1.3 var(--mono); }
+.clock .ctl { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+.clock .bar { flex-basis: 100%; height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; display: flex; }
+.clock .bar i { display: block; height: 100%; background: var(--accent-fill); width: 0; }
+.clock.over .bar i { background: var(--bad); }
+ol.segs { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ol.segs > li { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 16px; padding: 14px 16px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+ol.segs > li.now { border-color: var(--accent-fill); box-shadow: 0 0 0 2px var(--accent-fill) inset; }
+ol.segs > li.past { opacity: .62; }
+ol.segs .when { font: 600 13px/1.4 var(--mono); font-variant-numeric: tabular-nums; color: var(--accent); }
+ol.segs .when small { display: block; color: var(--muted); font-weight: 500; }
+ol.segs h4 { margin: 0 0 6px; font-size: 16px; }
+ol.segs .say { border-left: 3px solid var(--accent-fill); padding-left: 10px; margin: 8px 0 0; font-style: italic; }
+ol.segs .show { margin: 0; font-size: 15px; }
+ol.segs .skip { margin: 8px 0 0; font-size: 13.5px; color: var(--muted); }
+
+/* faq + glossary */
+details.faq { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); margin: 0 0 8px; max-width: 76ch; }
+details.faq summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; }
+details.faq summary::-webkit-details-marker { display: none; }
+details.faq summary::after { content: "+"; font: 500 18px/1 var(--mono); color: var(--accent); }
+details.faq[open] summary::after { content: "\2212"; }
+details.faq .a { padding: 0 16px 14px; }
+details.faq .a p:last-child { margin-bottom: 0; }
+dl.gloss { display: grid; grid-template-columns: minmax(150px, 220px) minmax(0, 1fr); gap: 0; margin: 14px 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden; max-width: 90ch; }
+dl.gloss dt, dl.gloss dd { padding: 10px 14px; border-top: 1px solid var(--line); margin: 0; }
+dl.gloss dt { font-weight: 650; }
+dl.gloss dt:first-of-type, dl.gloss dt:first-of-type + dd { border-top: 0; }
+
+/* self-check */
+.quiz { display: grid; gap: 12px; max-width: 76ch; }
+.q { border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); padding: 14px 16px; }
+.q h4 { margin: 0 0 10px; }
+.q .opts { display: grid; gap: 6px; }
+.q label { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; }
+.q label:hover { background: var(--panel2); }
+.q input { margin: 4px 0 0; accent-color: var(--accent); }
+.q label.right { border-color: var(--good); background: color-mix(in srgb, var(--good) 10%, var(--panel)); }
+.q label.wrong { border-color: var(--bad); background: color-mix(in srgb, var(--bad) 8%, var(--panel)); }
+.q .why { margin: 10px 0 0; font-size: 14.5px; }
+.q .why b { color: var(--good); }
+.q .why.miss b { color: var(--bad); }
+.score { font: 600 14px/1.3 var(--mono); color: var(--muted); }
+
+/* lightbox */
+.lb { position: fixed; inset: 0; z-index: 50; background: var(--scrim); display: grid; place-items: center;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.lb-in { width: min(1400px, 100%); max-height: 100%; overflow: auto; display: grid; gap: 12px; background: var(--panel); border-radius: 12px; padding: 14px; }
+.lb-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.lb-bar b { font-size: 15px; flex: 1 1 200px; min-width: 0; }
+.lb .frame { cursor: default; margin: 0 auto; }
+.lb ol.legend { margin-top: 0; }
+
+/* role filter note */
+.filtered { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; padding: 10px 14px; border: 1px solid var(--tint-line); background: var(--tint); border-radius: var(--radius); margin-bottom: 18px; font-size: 14.5px; }
+
+footer.foot { max-width: 1260px; margin: 0 auto; padding-block: 20px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
+
+.flash { animation: flash 1.6s ease-out 1; }
+@keyframes flash { 0% { background: color-mix(in srgb, var(--accent-fill) 40%, transparent); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .flash { animation: none; } .pin, .meter i { transition: none; } }
+
+/* ---------- narrow screens ---------- */
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .toc-btn { display: inline-flex; }
+  .toc {
+    position: fixed; z-index: 40; top: 0; bottom: 0; left: 0; width: min(320px, 86vw); max-height: none; background: var(--panel);
+    border-right: 1px solid var(--line); padding: calc(18px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px)) max(14px, env(safe-area-inset-left, 0px));
+    transform: translateX(-105%); transition: transform .2s; box-shadow: 0 0 40px rgba(0,0,0,.3);
+  }
+  .toc.open { transform: none; }
+  .toc a:hover, .toc a.on { background: var(--panel2); }
+  .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .flow li:nth-child(4) { border-left: 0; }
+  .flow li:nth-child(n+4) { border-top: 1px solid var(--line); }
+}
+@media (max-width: 640px) {
+  .tools .role { display: none; }
+  .search { flex-basis: 100%; max-width: none; order: 3; }
+  .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow li:nth-child(odd) { border-left: 0; }
+  .flow li:nth-child(4) { border-left: 1px solid var(--line); }
+  .flow li:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .life { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .life > div:nth-child(3) { border-left: 0; }
+  .life > div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  ol.segs > li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  dl.gloss { grid-template-columns: minmax(0, 1fr); }
+  dl.gloss dd { border-top: 0; padding-top: 0; }
+  .pin { width: 18px; height: 18px; font-size: 10px; line-height: 18px; box-shadow: 0 0 0 1.5px var(--pin-ring), 0 2px 6px rgba(0,0,0,.25); }
+  .wm b { font-size: 22px; }
+  .clock .big { font-size: 28px; }
+  h3 { font-size: 18px; }
+  .lede { font-size: 17.5px; }
+}
+</style>
+
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <button class="btn toc-btn" id="tocBtn" type="button" aria-expanded="false" aria-controls="toc">Contents</button>
+    <a class="wm" href="#start" aria-label="The Bridge Studio guide, back to the top"><b>The Bridge</b><span>Studio guide</span></a>
+    <div class="search" role="search">
+      <input id="q" type="search" placeholder="Search the guide" aria-label="Search the guide" autocomplete="off" aria-controls="results">
+      <kbd aria-hidden="true">/</kbd>
+      <div class="results" id="results" hidden></div>
+    </div>
+    <div class="tools">
+      <label class="role" for="role"><span>Show me</span>
+        <select id="role">
+          <option value="all">Everything</option>
+          <option value="p">What a producer needs</option>
+          <option value="r">What a reviewer needs</option>
+          <option value="a">What an admin needs</option>
+        </select>
+      </label>
+      <button class="btn" id="theme" type="button" aria-label="Switch between light and dark">Dark</button>
+    </div>
+  </div>
+  <div class="readbar" aria-hidden="true"><i id="readbar"></i></div>
+</header>
+
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Contents"></nav>
+
+<article id="guide">
+<div class="filtered" id="filtered" hidden></div>
+
+<!-- ============ START ============ -->
+<section class="sec hero" id="start" data-roles="p r a" data-group="Start here" data-label="Welcome">
+  <div class="eyebrow"><span>TaxStreem</span><span>·</span><span>Product guide</span><span>·</span><span>Version 1.0, 15 October 2026</span></div>
+  <h1>The Bridge Studio</h1>
+  <p class="lede">The studio turns the notes from a Friday open-office session into a finished podcast episode with a script, AI voices, on-screen visuals, an interactive web page and ready-to-post copy for each channel. Every screen is covered here with annotated screenshots. Use the search box at the top, or pick your role to hide what you won't need.</p>
+  <div class="meta"><span>About 40 minutes to read end to end</span><span>Quick start: about 20 minutes</span><span>Team demo: 15 minutes</span></div>
+  <ol class="flow" aria-label="The six steps of an episode">
+    <li><a href="#notes"><i>STEP 1</i><b>Notes</b><span>Drop in the session notes</span></a></li>
+    <li><a href="#script"><i>STEP 2</i><b>Script</b><span>Read and edit what the AI wrote</span></a></li>
+    <li><a href="#visuals"><i>STEP 3</i><b>Visuals</b><span>Shape what appears on screen</span></a></li>
+    <li><a href="#voices"><i>STEP 4</i><b>Voices</b><span>Generate the AI voices</span></a></li>
+    <li><a href="#review"><i>STEP 5</i><b>Review</b><span>Get a reviewer's approval</span></a></li>
+    <li><a href="#export"><i>STEP 6</i><b>Export</b><span>Download video, audio and posts</span></a></li>
+  </ol>
+  <div class="actions">
+    <a class="btn accent" href="#quickstart">Do the quick start</a>
+    <a class="btn" href="#demo">Run the 15-minute demo</a>
+    <a class="btn" href="https://thebridge-studio.netlify.app" target="_blank" rel="noopener">Open the studio</a>
+  </div>
+</section>
+
+<!-- ============ WHAT'S NEW ============ -->
+<section class="sec" id="new" data-roles="p r a" data-group="Start here" data-label="What's new">
+  <div class="eyebrow"><span>Changelog</span></div>
+  <h2 class="h">What's new</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>When</th><th>What changed</th><th>Read more</th></tr></thead>
+      <tbody>
+        <tr><td>15 Oct 2026</td><td>This guide. It also opens from <span class="ui">User guide</span> at the bottom of the studio's sidebar.</td><td><a href="#updating">Keeping it current</a></td></tr>
+        <tr><td>Oct 2026</td><td>Sign-in keeps working on a computer whose clock is wrong. A yellow notice tells you to fix the clock.</td><td><a href="#sign-in-problems">Sign-in problems</a></td></tr>
+        <tr><td>Oct 2026</td><td>Script writing and chat edits with Claude work on long episodes. The "compiled grammar is too large" error no longer appears.</td><td><a href="#notes">Notes</a></td></tr>
+        <tr><td>Oct 2026</td><td>Brand guide import reads a web page (.html) or a zipped project folder, with its fonts and logo.</td><td><a href="#brand-import">Import a brand guide</a></td></tr>
+        <tr><td>Oct 2026</td><td>Admins add teammates with a temporary password, so nobody waits for an invitation email.</td><td><a href="#team">Team</a></td></tr>
+        <tr><td>Release 1</td><td>The studio: notes to script, visuals, voices, review and export.</td><td><a href="#glance">The studio at a glance</a></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ BASICS ============ -->
+<section class="sec" id="basics" data-roles="p r a" data-group="Start here" data-label="Before you start">
+  <div class="eyebrow"><span>Everyone</span></div>
+  <h2 class="h">Before you start</h2>
+  <div class="prose">
+
+  <h3 id="outputs-list">What one session turns into</h3>
+  <p>A single Friday session gives the team a week of material. These are the files the Export tab produces, and the place each one usually goes.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Output</th><th>Shape or format</th><th>Where it goes</th></tr></thead>
+      <tbody>
+        <tr><td>Full episode video</td><td>MP4, 16:9</td><td>YouTube, the website</td></tr>
+        <tr><td>Short clips</td><td>MP4, 9:16 or 1:1</td><td>Reels, TikTok, Shorts, WhatsApp Status, LinkedIn, X</td></tr>
+        <tr><td>Podcast audio</td><td>MP3, plus a WAV master</td><td>Spotify, Apple Podcasts and other podcast apps</td></tr>
+        <tr><td>Interactive page</td><td>One .html file</td><td>The website, or sent as a file</td></tr>
+        <tr><td>Cover art</td><td>PNG</td><td>Podcast apps, newsletter, link previews</td></tr>
+        <tr><td>Captions and transcript</td><td>.srt, .vtt, .txt</td><td>YouTube and LinkedIn uploads, blog posts</td></tr>
+        <tr><td>Launch pack</td><td>Text you copy</td><td>Show notes, LinkedIn, WhatsApp broadcast, X, plus three suggested clips</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+
+  <h3 id="ground-rules">The rules the studio is built around</h3>
+  <p>The Bridge sessions are not recorded, for confidentiality. People who ask questions on a Friday trust us with details about their business, so the episode never uses them. The AI replaces every attendee with a fictional listener who has a new name, industry, city and set of figures, and a person checks that work before anything goes out.</p>
+  <ul class="plain">
+    <li>Every episode says it uses AI voices. A badge sits on screen and the host reads a short disclosure, both set on the <a href="#brand-words">Brand</a> page.</li>
+    <li>A cloned voice needs the speaker's written consent, recorded on the <a href="#cloning">Characters</a> page.</li>
+    <li>Tax figures come from the <a href="#facts">Tax facts</a> library, which the script writer treats as the current law.</li>
+    <li>Nothing goes out until a reviewer approves it. Until then every video and page carries a Draft watermark.</li>
+  </ul>
+
+  <h3 id="roles">Roles</h3>
+  <p>Everyone on the team has one of three roles. An admin sets it on the <a href="#team">Team</a> page. Pick your role in the <span class="ui">Show me</span> menu at the top of this guide to hide the parts you won't use.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>What you can do</th><th class="c">Producer</th><th class="c">Reviewer</th><th class="c">Admin</th></tr></thead>
+      <tbody>
+        <tr><td>Open episodes, read scripts, play previews, export files</td><td class="c yes">Yes</td><td class="c yes">Yes</td><td class="c yes">Yes</td></tr>
+        <tr><td>Leave comments</td><td class="c yes">Yes</td><td class="c yes">Yes</td><td class="c yes">Yes</td></tr>
+        <tr><td>Upload notes, write and edit scripts, use the chat</td><td class="c yes">Yes</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+        <tr><td>Generate voices, choose or clone voices</td><td class="c yes">Yes</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+        <tr><td>Change Brand, Characters, Pronunciation, Tax facts</td><td class="c yes">Yes</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+        <tr><td>Send for review, run a fact check, write the launch pack</td><td class="c yes">Yes</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+        <tr><td>Approve, mark as published</td><td class="c no">No</td><td class="c yes">Yes</td><td class="c yes">Yes</td></tr>
+        <tr><td>Add people, change roles, set passwords</td><td class="c no">No</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+        <tr><td>Settings, AI and voice keys</td><td class="c no">No</td><td class="c no">No</td><td class="c yes">Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+
+  <h3 id="sign-in">Signing in for the first time</h3>
+  <ol class="steps">
+    <li><div>Open <a href="https://thebridge-studio.netlify.app" target="_blank" rel="noopener">thebridge-studio.netlify.app</a> in Chrome or Edge on a laptop or desktop.</div></li>
+    <li><div>Type your work email and the temporary password your admin sent you, then press <span class="ui">Sign in</span>.</div></li>
+    <li><div>Change the password straight away. Click your name at the bottom left of the sidebar, type a new password and press <span class="ui">Set password</span>.</div></li>
+  </ol>
+  </div>
+  <div class="gallery">
+    <figure class="shot" data-shot="login"><img src="shots/login.webp" width="500" height="448" alt="The sign-in screen with email, password, a Sign in button and two links underneath" loading="lazy"><figcaption>The sign-in screen.</figcaption></figure>
+    <figure class="shot" data-shot="account"><img src="shots/account.webp" width="512" height="268" alt="Your account panel showing email, role and a new password field" loading="lazy"><figcaption>Your account, reached from your name at the bottom left.</figcaption></figure>
+  </div>
+  <div class="prose">
+  <p><span class="ui">Email me a sign-in link</span> and <span class="ui">Forgot password</span> only work once the team has switched on email sending. Until then, ask an admin to set a new password for you from the Team page. It takes them a few seconds.</p>
+
+  <h3 id="sign-in-problems">If something odd appears at sign-in</h3>
+  <h4>"You're signed in, but not on the team yet"</h4>
+  <p>Your email isn't on the Team page. Ask an admin to add the exact address you signed in with.</p>
+  <h4>"This computer's clock is about an hour fast"</h4>
+  <p>The studio works anyway, but fix the clock so other websites behave too. On a Mac, open System Settings, then General, then Date &amp; Time, turn on <em>Set time and date automatically</em> and set the time zone to Lagos. On Windows, open Settings, then Time &amp; language, then Date &amp; time, and turn on both automatic settings. Press <span class="ui">Hide</span> to dismiss the notice.</p>
+  <h4>"The studio couldn't load your account"</h4>
+  <p>This usually means the connection dropped while the studio was starting. Press <span class="ui">Try again</span>. If it keeps happening, check your internet connection, then <span class="ui">Sign out</span> and sign in again.</p>
+
+  <h3 id="browser">Which computer and browser</h3>
+  <p>Produce episodes in Chrome or Edge on a laptop or desktop. Video export runs on your own computer, so plug it in and keep the tab open while it works. Safari and Firefox can read and edit, but they save video as WebM, which most social apps reject. Reviewers can read, listen, comment and approve from a phone.</p>
+  </div>
+</section>
+
+<!-- ============ QUICK START ============ -->
+<section class="sec" id="quickstart" data-roles="p a" data-group="Start here" data-label="Quick start">
+  <div class="eyebrow"><span class="who">Producers · Admins</span><span>·</span><span>About 20 minutes</span></div>
+  <h2 class="h">Quick start: your first practice episode</h2>
+  <div class="prose">
+  <p>Work through these ten steps once with a practice episode and you will have touched every part of the studio. Your ticks are saved in this browser, so you can stop and come back. Generate voices for a handful of lines only, since every voiced character uses ElevenLabs credit, and delete the practice episode at the end.</p>
+  </div>
+  <div class="check-head"><div class="meter" aria-hidden="true"><i id="qsMeter"></i></div><span class="score" id="qsCount">0 of 10 done</span><button class="btn sm ghost" type="button" id="qsReset">Clear ticks</button></div>
+  <ol class="checklist" id="qs">
+    <li><input type="checkbox" id="qs1"><label for="qs1"><span class="t">Create a practice episode</span><span class="d">Episodes page, <span class="ui y">New episode</span>. <a href="#glance">How the list works</a></span></label></li>
+    <li><input type="checkbox" id="qs2"><label for="qs2"><span class="t">Paste a few paragraphs of notes and press Write the script</span><span class="d">Use last week's notes or invent a short session. Keep the tab open until "Script ready" appears. <a href="#notes">Notes tab</a></span></label></li>
+    <li><input type="checkbox" id="qs3"><label for="qs3"><span class="t">Read the "What was anonymised" table</span><span class="d">Check that no real name, company or exact figure survived. <a href="#anonymised">Why it matters</a></span></label></li>
+    <li><input type="checkbox" id="qs4"><label for="qs4"><span class="t">Edit one line and add one visual card</span><span class="d">Script tab, click into a line, then More, then Add visual. <a href="#cards">Card types</a></span></label></li>
+    <li><input type="checkbox" id="qs5"><label for="qs5"><span class="t">Ask the chat for one change</span><span class="d">Visuals tab. Try "Make the captions boxed", watch the preview change, then press Undo last. <a href="#chat">Chat edits</a></span></label></li>
+    <li><input type="checkbox" id="qs6"><label for="qs6"><span class="t">Hear a character's voice</span><span class="d">Characters page, type a sentence next to Listen. <a href="#characters">Characters</a></span></label></li>
+    <li><input type="checkbox" id="qs7"><label for="qs7"><span class="t">Add one word to the pronunciation library</span><span class="d">Try "TaxStreem" said as "Tax Stream" and press Listen. <a href="#pronunciation">Pronunciation</a></span></label></li>
+    <li><input type="checkbox" id="qs8"><label for="qs8"><span class="t">Voice three lines and play them</span><span class="d">Script tab, Generate voice on three lines, then Play. <a href="#voices">Voices</a></span></label></li>
+    <li><input type="checkbox" id="qs9"><label for="qs9"><span class="t">Leave a comment and send the episode for review</span><span class="d">Review tab. <a href="#review">Review</a></span></label></li>
+    <li><input type="checkbox" id="qs10"><label for="qs10"><span class="t">Export a 9:16 clip of those three lines, then delete the practice episode</span><span class="d">Export tab, tick "Export a clip instead of the full episode". Delete from Episode settings. <a href="#export">Export</a></span></label></li>
+  </ol>
+</section>
+
+<!-- ============ GLANCE ============ -->
+<section class="sec" id="glance" data-roles="p r a" data-group="Start here" data-label="The studio at a glance">
+  <div class="eyebrow"><span>Everyone</span></div>
+  <h2 class="h">The studio at a glance</h2>
+  <div class="prose">
+  <p>The sidebar holds seven pages. Episodes is where the weekly work happens. The other six hold settings that every episode shares: the cast, how words are said, how the show looks and sounds, the tax figures, the team and the AI keys.</p>
+  </div>
+  <figure class="shot" data-shot="episodes"><img src="shots/episodes.webp" width="1440" height="900" alt="The Episodes page listing three episodes with their status" loading="lazy"><figcaption>The Episodes page. Each row shows how far the episode has got: how many lines, how many are voiced and how many visuals it has.</figcaption></figure>
+  <div class="prose">
+  <h3 id="statuses">The four statuses</h3>
+  <p>Every episode moves through the same four statuses, shown as a pill on the Episodes page and at the top of the episode.</p>
+  </div>
+  <div class="life">
+    <div><span class="pill">draft</span><p>Being written and edited. Exports carry the Draft watermark.</p></div>
+    <div><span class="pill rv">review</span><p>Waiting for a reviewer. Producers can still make changes.</p></div>
+    <div><span class="pill ok">approved</span><p>A reviewer signed off on this exact script. The watermark goes away.</p></div>
+    <div><span class="pill ok">published</span><p>Out in the world. Marking it keeps the team's records straight.</p></div>
+  </div>
+  <div class="prose">
+  <div class="call rule"><b>Remember</b><p>Approval belongs to the script as it stood when the reviewer approved it. If anyone changes a line afterwards, the episode drops back to review and the watermark returns.</p></div>
+  <h3 id="inside-episode">Inside an episode</h3>
+  <p>An episode has six tabs that follow the order of the work: <span class="ui">Notes</span>, <span class="ui">Script</span>, <span class="ui">Visuals</span>, <span class="ui">Voices</span>, <span class="ui">Review</span> and <span class="ui">Export</span>. The other tabs open once a script exists. The number beside Review counts the checks still open. Changes save on their own, and the word <em>Saved</em> beside the status pill confirms it. <span class="ui">Episode settings</span> at the top right changes the episode number or deletes the episode, and <span class="ui">← All episodes</span> takes you back to the list.</p>
+  <div class="call"><b>Tip</b><p>The studio saves the whole episode each time. Two people typing in the same episode at once can overwrite each other, so agree who holds the pen. Reviewers can comment at any time without that risk.</p></div>
+  </div>
+</section>
+
+<!-- ============ NOTES ============ -->
+<section class="sec" id="notes" data-roles="p a" data-group="Making an episode" data-label="Notes" data-step="1">
+  <div class="eyebrow"><span>Step 1 of 6</span><span>·</span><span>Notes tab</span><span>·</span><span class="who">Producers · Admins</span></div>
+  <h2 class="h">Notes</h2>
+  <div class="prose">
+  <p>Every episode starts with the notes from a Friday session. The AI reads them, picks the strongest questions and writes a script with a host, the tax expert and fictional listeners.</p>
+  </div>
+  <figure class="shot" data-shot="notes"><img src="shots/notes.webp" width="1212" height="1142" alt="The Notes tab with the meeting notes panel, the write the script panel and the anonymisation table" loading="lazy"><figcaption>The Notes tab after a script has been written.</figcaption></figure>
+  <div class="prose">
+  <h3 id="notes-steps">Writing the script</h3>
+  <ol class="steps">
+    <li><div>On the Episodes page press <span class="ui y">New episode</span>. It gets the next number.</div></li>
+    <li><div>Drop the notes file onto <em>Drop the session notes here</em>. Word, PDF, plain text, Markdown and transcript files (.vtt, .srt) all work, and so do exports from Gemini and Otter. You can paste the text into <em>Or paste the notes</em> instead.</div></li>
+    <li><div>Set the <em>Session date</em>. It shows in the episode header.</div></li>
+    <li><div>Add <em>Instructions for this episode</em> if you want something specific. The AI always follows the house style set in <a href="#settings">Settings</a>; these instructions add to it for this episode only.</div></li>
+    <li><div>Press <span class="ui y">Write the script</span>. It usually takes a few minutes. Keep the tab open until the message "Script ready" appears.</div></li>
+  </ol>
+  <p>Some instructions that work well. Press Copy and paste one into the box.</p>
+  </div>
+  <div class="prompts">
+    <div class="prompt"><q>Focus on the VAT questions. Leave out the career advice section.</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Keep it under eight minutes and open with the question about the ₦5 million penalty.</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Explain IFRS 15 in plain words for someone who has never heard of it.</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Add one quiz question at the end of each part.</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Make one of the listeners a woman who runs a logistics business in Aba.</q><button class="btn sm copy" type="button">Copy</button></div>
+  </div>
+  <div class="prose">
+  <h3 id="anonymised">The "What was anonymised" table</h3>
+  <p>Under the two panels, the studio lists every person or detail it changed. The left column shows what the notes said and the right column shows what the episode uses instead. Read the script once with this list beside you. The AI does most of the work, but a person signs off on anonymity, every time.</p>
+  <h3 id="rewrite">Rewriting or starting blank</h3>
+  <p>Once a script exists the button reads <span class="ui y">Rewrite from notes</span>. It writes a fresh script from the notes and replaces the current one. The studio saves a version first, so you can bring the old script back from <a href="#review">Review</a>, under Versions. <span class="ui">Start a blank script</span> lets you write an episode by hand.</p>
+  <div class="call"><b>Tip</b><p>Notes that record each question, the expert's answer and any figure quoted make the best episodes. Real names can stay in the notes because the AI removes them, but never post the raw notes in a shared channel.</p></div>
+  </div>
+</section>
+
+<!-- ============ SCRIPT ============ -->
+<section class="sec" id="script" data-roles="p r a" data-group="Making an episode" data-label="Script" data-step="2">
+  <div class="eyebrow"><span>Step 2 of 6</span><span>·</span><span>Script tab</span><span>·</span><span class="who">Everyone reads it, producers edit it</span></div>
+  <h2 class="h">Script</h2>
+  <div class="prose">
+  <p>The Script tab is the episode, line by line. Visuals, voices and every export are built from it, so time spent here pays off everywhere else.</p>
+  <h3 id="script-top">The top panel</h3>
+  </div>
+  <figure class="shot" data-shot="script-top"><img src="shots/script-top.webp" width="1156" height="366" alt="The top of the Script tab with title, summary, fictional listeners and calculators" loading="lazy"><figcaption>Title, summary, listeners and calculators.</figcaption></figure>
+  <div class="prose">
+  <p>The <em>Episode title</em> and <em>One-line summary</em> appear on the cover, the interactive page and the launch pack. <em>Listeners in this episode (fictional)</em> lists the people the AI invented, each with a short description and a male or female listener voice; <span class="ui">Add listener</span> creates another. <em>Calculators on the episode page</em> picks which tools appear on the interactive page: VAT on fee vs package, Company vs business name, and Personal income tax. The button at the right voices every new or changed line in one go.</p>
+
+  <h3 id="script-lines">Anatomy of a line</h3>
+  </div>
+  <figure class="shot" data-shot="script-line"><img src="shots/script-line.webp" width="1164" height="436" alt="One script line with speaker, line type, text, voice status, a visual card, a quiz and the More menu open" loading="lazy"><figcaption>A listener's voice note with a visual card and a quiz question attached. The More menu is open on the right.</figcaption></figure>
+  <div class="prose">
+  <p>Click into the text to edit it. The second menu sets how the line is delivered:</p>
+  <ul class="plain">
+    <li><b>Studio</b> is the host or the expert talking in the studio.</li>
+    <li><b>Voice note</b> is a listener's recorded question. A short message sound plays before it.</li>
+    <li><b>Written question</b> is a question sent in writing, which the host reads out.</li>
+  </ul>
+  <p>The pill under the text shows where the voice stands.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Pill</th><th>Meaning</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill">No voice yet</span></td><td>The line has never been voiced.</td><td>Press Generate voice, or generate all lines from the top panel.</td></tr>
+        <tr><td><span class="pill rv">Generating…</span></td><td>ElevenLabs is making the audio.</td><td>Wait a few seconds.</td></tr>
+        <tr><td><span class="pill bad">Out of date</span></td><td>Something changed since the line was voiced: the words, the speaker's voice or its sliders, a pronunciation, or the voice model.</td><td>Press Regenerate.</td></tr>
+        <tr><td><span class="pill ok">Voice ready · 18.3s</span></td><td>Voiced and current. The number is the length.</td><td>Press Play to hear it.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+  <p><span class="ui">Check words</span> plays the audio to a speech-to-text model and compares what it heard with the script. Any word it missed appears next to <em>Check:</em> in red. Play the line; if the voice skipped or garbled the word, add it to the <a href="#pronunciation">pronunciation library</a> or reword the line, then regenerate. A foreign place name sometimes trips the checker even when the voice said it well, so trust your ears.</p>
+  <p><span class="ui">More</span> opens the line's tools: <span class="ui">Add visual</span>, <span class="ui">Add quiz question</span>, <span class="ui">Insert line below</span>, <span class="ui">Start new part here</span>, the arrows that move a line up or down, and <span class="ui">Delete line</span>.</p>
+
+  <h3 id="cards">Visual cards</h3>
+  <p>A card is a graphic that appears on screen while a line plays. The script writer adds cards on its own, and you can add, change or remove them. There are twelve types.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Card</th><th>Use it for</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><b>Big figure</b></td><td>One number that matters</td><td>₦300,000 · Revenue on a ₦3m package</td></tr>
+        <tr><td><b>Key point</b></td><td>A rule or takeaway in one sentence</td><td>An agent's revenue is its commission</td></tr>
+        <tr><td><b>Before → after</b></td><td>A change from one state to another</td><td>VAT on the package → VAT on the commission</td></tr>
+        <tr><td><b>Share of a total</b></td><td>A part of a whole</td><td>₦300k commission out of a ₦3m package</td></tr>
+        <tr><td><b>Comparison bars</b></td><td>Two to four amounts side by side</td><td>Tax as a company against tax as a business name</td></tr>
+        <tr><td><b>Formula</b></td><td>How a figure is worked out</td><td>VAT = 7.5% × commission</td></tr>
+        <tr><td><b>Numbered steps</b></td><td>A process in order</td><td>How to register for VAT</td></tr>
+        <tr><td><b>List</b></td><td>Items with no order</td><td>Records to keep for an audit</td></tr>
+        <tr><td><b>Legal / not legal</b></td><td>What the law allows and what it doesn't</td><td>Charging VAT you never remit</td></tr>
+        <tr><td><b>Listener question</b></td><td>Puts the question on screen as it is asked</td><td>If I don't charge my customer VAT, do I still have to pay it?</td></tr>
+        <tr><td><b>Call to action</b></td><td>Where to go next</td><td>Join The Bridge on Friday at 4 p.m.</td></tr>
+        <tr><td><b>Image</b></td><td>A picture you upload</td><td>A screenshot of a form</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <figure class="shot strip" data-shot="card-editor"><img src="shots/card-editor.webp" width="834" height="296" alt="The card editor for a Big figure card" loading="lazy"><figcaption>Editing a card. Each card type has its own fields.</figcaption></figure>
+  <div class="prose">
+  <p><em>Appears when these words are spoken</em> controls timing. The card shows up as the voice reaches those words, so pick the words that introduce the idea. The colour setting picks between Brand, Positive, Neutral and Warning; save Warning for penalties and risks so it keeps its force.</p>
+  <div class="call"><b>Tip</b><p>One card per idea. If two cards land within a few seconds of each other, the preview shows them crowding, and viewers on a phone read neither.</p></div>
+
+  <h3 id="quiz">Quiz questions</h3>
+  </div>
+  <figure class="shot strip" data-shot="quiz-editor"><img src="shots/quiz-editor.webp" width="834" height="399" alt="The quiz editor with a question, three options and an explanation" loading="lazy"><figcaption>A quiz question attached to a line.</figcaption></figure>
+  <div class="prose">
+  <p>Quiz questions only appear on the interactive page. When playback reaches the line, the episode pauses and asks the question. The listener picks an answer, sees whether it was right along with your <em>Why</em> text, and carries on. Up to four options are allowed. Pick the right one with the round button next to it.</p>
+
+  <h3 id="parts">Parts and music</h3>
+  </div>
+  <figure class="shot strip" data-shot="chapter"><img src="shots/chapter.webp" width="1160" height="113" alt="A part header with title, music choice and Merge into previous" loading="lazy"><figcaption>The header at the start of a part.</figcaption></figure>
+  <div class="prose">
+  <p>Episodes are split into parts. <span class="ui">Start new part here</span> in a line's More menu begins one. The part title shows on screen (for example "Part 2 · VAT for travel agents"), in the chapter list on the interactive page and in the show notes. The music menu plays a cue as the part opens: <em>Intro sting + bed</em> for the opening, <em>Chapter ident</em> between parts and <em>Outro music</em> for the close. The cues themselves are set on the <a href="#brand-music">Brand</a> page. <span class="ui">Merge into previous</span> removes the break.</p>
+
+  <h3 id="flags">Checks and notes from the AI</h3>
+  </div>
+  <figure class="shot strip" data-shot="script-flag"><img src="shots/script-flag.webp" width="1164" height="293" alt="A line with a Check item underneath and a Resolved checkbox" loading="lazy"><figcaption>A check left by the script writer.</figcaption></figure>
+  <div class="prose">
+  <p>The script writer and the fact check leave items under lines. <em>Check:</em> needs a decision, for instance a figure that differed from Tax facts. <em>Note:</em> is for information. Read each one, fix the line if needed and tick <em>Resolved</em>. The count on the Review tab drops as you go.</p>
+  </div>
+</section>
+
+<!-- ============ VISUALS ============ -->
+<section class="sec" id="visuals" data-roles="p r a" data-group="Making an episode" data-label="Visuals" data-step="3">
+  <div class="eyebrow"><span>Step 3 of 6</span><span>·</span><span>Visuals tab</span><span>·</span><span class="who">Everyone watches, producers change</span></div>
+  <h2 class="h">Visuals</h2>
+  <div class="prose">
+  <p>The Visuals tab is a live preview of the video with a chat beside it. You describe a change in plain words and the AI makes it in the script and on screen.</p>
+  </div>
+  <figure class="shot" data-shot="visuals"><img src="shots/visuals.webp" width="1440" height="900" alt="The Visuals tab with the video preview on the left and the Ask for changes chat on the right" loading="lazy"><figcaption>The preview on the left and the chat on the right, after one request.</figcaption></figure>
+  <div class="prose">
+  <h3 id="preview">The preview</h3>
+  <p>The three buttons above the preview switch between 16:9, 9:16 and 1:1. Before any line is voiced, the preview runs silently with estimated timing. Once lines have voices, press <span class="ui">Load audio</span> to mix them with the music, then <span class="ui">Play</span> and drag the slider to move around. After changing lines or regenerating voices, press <span class="ui">Remix audio</span> to hear the new version. The button reads <em>Preparing…</em> for a moment while the preview builds.</p>
+
+  <h3 id="chat">Asking for changes</h3>
+  <p>Type what you want in the box and press <span class="ui">Send</span> (or Enter). The AI replies with what it did, followed by a list of the changes. Anything it could not do appears as <em>Skipped:</em> with the reason. <span class="ui">Undo last</span> reverses the most recent chat change, and you can press it more than once.</p>
+  <p>The chat can rewrite, add or delete lines. It can add, change or remove visual cards and quiz questions, rename parts and set their music, change brand colours, switch on-screen elements on or off, edit the end card and rename the fictional listeners.</p>
+  </div>
+  <div class="prompts">
+    <div class="prompt"><q>Make the captions boxed and turn on the progress bar</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Add a steps card when Kelechi explains how to register</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Shorten Funke's first voice note to two sentences</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Put the ₦5m penalty card in the warning colour</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Add a quiz question at the end of part 2 about who pays VAT on the commission</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Rename part 2 to "What travel agents owe"</q><button class="btn sm copy" type="button">Copy</button></div>
+    <div class="prompt"><q>Change the end card headline to "Bring your question on Friday"</q><button class="btn sm copy" type="button">Copy</button></div>
+  </div>
+  <div class="prose">
+  <div class="call rule"><b>Remember</b><p>Brand colours, the on-screen layout and the end card belong to the whole show. A chat change to any of them shows up in every episode, old ones included.</p></div>
+
+  <h3 id="onscreen">On screen</h3>
+  </div>
+  <figure class="shot strip" data-shot="onscreen"><img src="shots/onscreen.webp" width="714" height="179" alt="The On screen panel with six checkboxes and three settings" loading="lazy"><figcaption>Under the preview. These settings apply to every episode.</figcaption></figure>
+  <div class="prose">
+  <p>The checkboxes switch elements on or off: <em>Speakers</em>, <em>Captions</em>, <em>Chapter label</em>, <em>AI badge</em>, <em>Logo</em> and <em>Progress bar</em>. <em>Captions</em> chooses <em>Word by word</em> (each word lights up as it is spoken), <em>Plain</em> or <em>Boxed</em>. <em>Speakers shown as</em> picks photos or initials. <em>End card (seconds)</em> sets how long the closing card stays up.</p>
+  <div class="call rule"><b>Remember</b><p>Keep the AI badge switched on. It is part of how we tell the audience the voices are AI.</p></div>
+  <h3 id="shapes">Check each shape</h3>
+  <p>Titles and cards wrap differently in portrait. Before exporting a 9:16 clip, switch the preview to 9:16 and scrub through it.</p>
+  </div>
+  <figure class="shot phone" data-shot="visuals-portrait"><img src="shots/visuals-portrait.webp" width="701" height="918" alt="The preview in 9:16 portrait shape" loading="lazy"><figcaption>The same moment in 9:16.</figcaption></figure>
+</section>
+
+<!-- ============ VOICES ============ -->
+<section class="sec" id="voices" data-roles="p a" data-group="Making an episode" data-label="Voices" data-step="4">
+  <div class="eyebrow"><span>Step 4 of 6</span><span>·</span><span>Voices tab</span><span>·</span><span class="who">Producers · Admins</span></div>
+  <h2 class="h">Voices</h2>
+  <div class="prose">
+  <p>The Voices tab voices the whole episode at once and shows what it will cost.</p>
+  </div>
+  <figure class="shot" data-shot="voices"><img src="shots/voices.webp" width="1212" height="900" alt="The Voices tab with the cast table and the ElevenLabs credit panel" loading="lazy"><figcaption>The cast on the left, ElevenLabs credit on the right.</figcaption></figure>
+  <div class="prose">
+  <p>The cast table lists each speaker, the voice they use and how many lines they have. A speaker whose voice reads <em>No voice chosen</em> in orange needs one picked on the <a href="#characters">Characters</a> page first. <span class="ui y">Generate N lines</span> voices every line that is new or out of date, and the estimate below it shows roughly how many ElevenLabs characters that uses. When everything is current the button reads <em>All voices are up to date</em>.</p>
+  <p><span class="ui">Check every word</span> runs the listen-back check over every voiced line, then tells you how many lines to look at in the Script tab. Run it once per episode before sending it for review.</p>
+  <h3 id="credit">Spending credit wisely</h3>
+  <p>ElevenLabs charges by the character, roughly one credit for each letter, space and punctuation mark on most models. The panel on the right shows this month's use and the reset date.</p>
+  <ul class="plain">
+    <li>Settle the wording and the pronunciation library before generating, since every change after that means paying for the line again.</li>
+    <li>Regenerate single lines from the Script tab when only a few have changed.</li>
+    <li>Moving a character's sliders, or changing the voice model in Settings, marks lines out of date in every episode. Make those changes between episodes, on purpose.</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ REVIEW ============ -->
+<section class="sec" id="review" data-roles="p r a" data-group="Making an episode" data-label="Review" data-step="5">
+  <div class="eyebrow"><span>Step 5 of 6</span><span>·</span><span>Review tab</span><span>·</span><span class="who">Reviewers approve, everyone comments</span></div>
+  <h2 class="h">Review</h2>
+  <div class="prose">
+  <p>The Review tab is where an episode gets its sign-off. It also holds the fact check, the comments and the version history.</p>
+  </div>
+  <figure class="shot" data-shot="review"><img src="shots/review.webp" width="1212" height="1052" alt="The Review tab with Approval, Checks, Comments and Versions" loading="lazy"><figcaption>An episode in review with two open checks.</figcaption></figure>
+  <div class="prose">
+  <h3 id="approval">Approval</h3>
+  <p>The panel shows the status, who approved and when, how many checks are open and how many lines still need voices. The buttons change with the status:</p>
+  <ul class="plain">
+    <li><span class="ui">Send for review</span> moves a draft to review. Producers and admins.</li>
+    <li><span class="ui y">Approve</span> signs off the current script and removes the watermark from exports. Reviewers and admins. If checks are open or lines lack voices, the studio asks you to confirm first.</li>
+    <li><span class="ui">Mark as published</span> records that the episode is out. Reviewers and admins.</li>
+    <li><span class="ui">Back to draft</span> reopens the episode for big changes.</li>
+  </ul>
+  <h3 id="factcheck">Fact check</h3>
+  <p><span class="ui">Run a fact check</span> sends the script to the AI with the Tax facts library and adds an item under any claim that doesn't match. Run it after the last big edit, then resolve each item in the Script tab.</p>
+  <h3 id="comments">Comments</h3>
+  <p>Pick a line in the <em>About</em> menu, or <em>The whole episode</em>, type a note and press <span class="ui">Add comment</span>. Name the change you want ("say 7.5% instead of 7 and a half percent") so the producer can act without a meeting.</p>
+  <h3 id="versions">Versions</h3>
+  <p>The studio saves a version before every AI rewrite, approval and restore. <span class="ui">Restore</span> brings one back. The current script is saved as a version first, and the episode returns to draft.</p>
+  <h3 id="review-phone">Reviewing on a phone</h3>
+  </div>
+  <figure class="shot phone" data-shot="phone-review"><img src="shots/phone-review.webp" width="780" height="1688" alt="The Review tab on a phone screen" loading="lazy"><figcaption>Reviewers can approve from a phone.</figcaption></figure>
+  <div class="prose">
+  <div class="call"><b>Reviewer's checklist</b>
+    <ul class="plain">
+      <li>The anonymised table on the Notes tab covers everyone in the notes, and no real detail survives in the script.</li>
+      <li>Every figure matches Tax facts. Run the fact check if nobody has.</li>
+      <li>The Review tab shows no open checks.</li>
+      <li>You listened to the whole episode once in the Visuals tab, with audio loaded.</li>
+      <li>The shapes the team plans to post look right, especially 9:16.</li>
+    </ul>
+  </div>
+  </div>
+</section>
+
+<!-- ============ EXPORT ============ -->
+<section class="sec" id="export" data-roles="p r a" data-group="Making an episode" data-label="Export" data-step="6">
+  <div class="eyebrow"><span>Step 6 of 6</span><span>·</span><span>Export tab</span><span>·</span><span class="who">Everyone</span></div>
+  <h2 class="h">Export</h2>
+  <div class="prose">
+  <p>The Export tab turns the episode into files. The banner at the top warns you if the episode isn't approved yet (videos and pages then carry the Draft watermark) or if any line has no current voice (it would be silent).</p>
+  </div>
+  <figure class="shot" data-shot="export"><img src="shots/export.webp" width="1212" height="1553" alt="The Export tab with Video, Audio and page, Text and the Launch pack" loading="lazy"><figcaption>The Export tab with the launch pack written.</figcaption></figure>
+  <div class="prose">
+  <h3 id="export-video">Video</h3>
+  <p>Pick <em>Landscape 16:9</em>, <em>Portrait 9:16</em> or <em>Square 1:1</em>. Tick <em>Export a clip instead of the full episode</em> and choose the first and last line to make a short clip. For a full episode, <em>Add the intro and outro video</em> puts the bookend videos from the Brand page on either side. Press <span class="ui y">Export MP4</span>.</p>
+  <p>The video renders on your computer and a full episode takes about as long as the episode itself. A progress bar shows how far it has got and <span class="ui">Cancel</span> stops it. Keep the tab open and the laptop plugged in. Chrome and Edge make MP4; other browsers fall back to WebM.</p>
+  <h3 id="export-audio">Audio and page</h3>
+  <ul class="plain">
+    <li><span class="ui">MP3 for podcast apps</span> is the file to upload to the podcast host.</li>
+    <li><span class="ui">WAV master</span> is full quality, for archiving or for an editor.</li>
+    <li><span class="ui">Interactive page (.html)</span> is one file holding the audio, visuals, quiz pauses, calculators and transcript. Upload it to the website or send it as it is.</li>
+    <li><span class="ui">Cover art (.png)</span> is a square cover with the episode title.</li>
+  </ul>
+  <h3 id="export-text">Text</h3>
+  <p><span class="ui">Captions .srt</span> suits YouTube and LinkedIn uploads. <span class="ui">Captions .vtt</span> suits web players. <span class="ui">Transcript</span> is plain text with speaker names, useful for a blog post or for search engines.</p>
+  <h3 id="launch-pack">Launch pack</h3>
+  <p><span class="ui">Write show notes, posts and clip picks</span> asks the AI for show notes with chapters, a LinkedIn post, a WhatsApp broadcast, a short post for X and the three best moments for vertical clips. Every box is editable and has its own Copy button. <span class="ui">Write again</span> asks for a fresh set.</p>
+  <p>Each clip pick has a title and a reason. <span class="ui">Set up this clip (9:16)</span> fills in the clip range, switches the shape to portrait and scrolls back up to the video settings. Press Export MP4 from there.</p>
+  <div class="call"><b>Tip</b><p>The launch pack is a first draft. Read it in the voice of the channel: LinkedIn wants a point of view in the first line, WhatsApp wants it short with the link at the end.</p></div>
+  <h3 id="outputs">What the exports look like</h3>
+  </div>
+  <div class="gallery">
+    <figure class="shot" data-shot="out-cover"><img src="shots/out-cover.webp" width="900" height="900" alt="Square cover art with the episode title" loading="lazy"><figcaption>Cover art.</figcaption></figure>
+    <figure class="shot" data-shot="out-interactive-phone"><img src="shots/out-interactive-phone.webp" width="390" height="844" alt="The interactive page on a phone" loading="lazy"><figcaption>The interactive page on a phone.</figcaption></figure>
+  </div>
+  <figure class="shot" data-shot="out-clip-frames"><img src="shots/out-clip-frames.webp" width="1600" height="711" alt="Four frames from a 9:16 clip showing a part title, captions and a key point card" loading="lazy"><figcaption>Four moments from a 9:16 clip, in order. The part title comes up, then the captions light word by word, then a card arrives on its cue. This one still carries the Draft watermark.</figcaption></figure>
+  <figure class="shot" data-shot="out-interactive"><img src="shots/out-interactive.webp" width="1280" height="800" alt="The top of the interactive page with the show name, episode title and the player" loading="lazy"><figcaption>The interactive page opens with the episode title and the player.</figcaption></figure>
+  <figure class="shot" data-shot="out-interactive-calc"><img src="shots/out-interactive-calc.webp" width="1280" height="800" alt="A calculator on the interactive page" loading="lazy"><figcaption>A calculator further down the page, under "Run your own numbers".</figcaption></figure>
+  <div class="prose">
+  <p>On the interactive page a listener can jump between parts from <em>In this episode</em>, answer quiz questions when playback pauses (or press <em>Skip and keep listening</em>), change the speed, try the calculators and read the transcript, where tapping any line plays it.</p>
+  </div>
+</section>
+
+<!-- ============ CHARACTERS ============ -->
+<section class="sec" id="characters" data-roles="p a" data-group="Shared settings" data-label="Characters">
+  <div class="eyebrow"><span>Characters page</span><span>·</span><span class="who">Producers · Admins</span></div>
+  <h2 class="h">Characters</h2>
+  <div class="prose">
+  <p>Characters are the voices of the show. Hosts and tax experts appear on screen with a photo or initials. Listener voices speak for the fictional listeners each script invents, and the AI picks a male or female listener voice for each one.</p>
+  </div>
+  <figure class="shot" data-shot="characters"><img src="shots/characters.webp" width="1212" height="1500" alt="The Characters page with a host and a tax expert" loading="lazy"><figcaption>A host and a tax expert. The expert uses a cloned voice, so the consent box appears.</figcaption></figure>
+  <div class="prose">
+  <h3 id="character-fields">What each field does</h3>
+  <ul class="plain">
+    <li><b>Photo</b> replaces the initials on screen. Use a square, well-lit head and shoulders.</li>
+    <li><b>Name</b> and <b>Shown as</b> appear under the speaker on screen, for example "Kelechi Ibe" and "Co-founder, TaxStreem".</li>
+    <li><b>Colour</b> fills the circle behind the initials when there's no photo.</li>
+    <li><b>About (helps the script writer)</b> tells the AI who this person is and how they talk. A line such as "Explains with Lagos market examples, never uses jargon without defining it" changes the script for the better.</li>
+    <li><b>Voice</b> opens the voice picker with <span class="ui">Choose a voice</span> or <span class="ui">Change voice</span>.</li>
+  </ul>
+  <h3 id="sliders">Tuning a voice</h3>
+  <p>Four sliders change how the voice performs. Type a sentence in the box underneath and press <span class="ui">Listen</span> to hear the result before generating a whole episode.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Slider</th><th>Lower</th><th>Higher</th><th>Studio default</th></tr></thead>
+      <tbody>
+        <tr><td><b>Stability</b></td><td>More expressive, can wander</td><td>Steadier, can sound flat</td><td>0.50</td></tr>
+        <tr><td><b>Likeness</b></td><td>Freer interpretation</td><td>Sticks closely to the original voice</td><td>0.80</td></tr>
+        <tr><td><b>Style</b></td><td>Neutral delivery</td><td>More flair, less stable</td><td>0.15</td></tr>
+        <tr><td><b>Speed</b></td><td>Slower (0.7)</td><td>Faster (1.2)</td><td>1.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+  <p>For dense tax explanations, try a speed of 0.95. If a voice sounds flat, lower Stability by 0.05 at a time and listen again.</p>
+  <div class="call rule"><b>Remember</b><p>Moving a slider marks every line this character speaks, in every episode, as out of date. Tune voices before a run of episodes, never the day before publishing.</p></div>
+
+  <h3 id="voice-picker">Choosing a voice</h3>
+  </div>
+  <figure class="shot" data-shot="voice-library"><img src="shots/voice-library.webp" width="1100" height="647" alt="The voice picker on the Nigerian voice library tab" loading="lazy"><figcaption>The voice picker opens on the Nigerian voice library.</figcaption></figure>
+  <div class="prose">
+  <p>The picker has three tabs. <b>Nigerian voice library</b> searches the ElevenLabs shared library. Filter by accent (Nigerian, African, Ghanaian or any) and by voice, and search by feel with words like <em>warm</em>, <em>podcast</em> or <em>Lagos</em>. Press <span class="ui">Listen</span> to hear a sample and <span class="ui y">Use this voice</span> to give it to the character. <b>My ElevenLabs voices</b> lists voices already in the team's ElevenLabs account, including professional clones. <b>Clone a voice</b> makes a new one.</p>
+
+  <h3 id="cloning">Cloning a voice</h3>
+  </div>
+  <figure class="shot" data-shot="voice-clone"><img src="shots/voice-clone.webp" width="1100" height="496" alt="The Clone a voice tab with an upload area and the consent checkbox" loading="lazy"><figcaption>The Create clone button stays grey until the consent box is ticked.</figcaption></figure>
+  <div class="prose">
+  <ol class="steps">
+    <li><div>Record one to three minutes of the person talking naturally, alone, in a quiet room. MP3, WAV and M4A all work.</div></li>
+    <li><div>Drop the recordings in, check the name and tick <em>Remove background noise</em> only if the recording is noisy.</div></li>
+    <li><div>Tick <em>The speaker agreed in writing to have their voice cloned for The Bridge</em>, then press <span class="ui y">Create clone</span>. ElevenLabs sometimes asks the speaker to verify the clone before it can be used.</div></li>
+    <li><div>Back on the character, tick the consent box under the voice and type where the written consent is kept.</div></li>
+  </ol>
+  <p>This makes an instant clone. For the best quality, make a professional clone in ElevenLabs with 30 minutes or more of audio and pick it under My ElevenLabs voices.</p>
+  <div class="call rule"><b>Remember</b><p>Never clone a voice without the speaker's written consent, and never clone an attendee of The Bridge.</p></div>
+  </div>
+</section>
+
+<!-- ============ PRONUNCIATION ============ -->
+<section class="sec" id="pronunciation" data-roles="p a" data-group="Shared settings" data-label="Pronunciation">
+  <div class="eyebrow"><span>Pronunciation page</span><span>·</span><span class="who">Producers · Admins</span></div>
+  <h2 class="h">Pronunciation</h2>
+  <div class="prose">
+  <p>The pronunciation library teaches the voices how to say acronyms, names and brands. Captions keep the written form and only the voice hears the "say as" version. Naira amounts such as ₦3m are read as "3 million naira" without any entry.</p>
+  </div>
+  <figure class="shot" data-shot="pronunciation"><img src="shots/pronunciation.webp" width="1440" height="900" alt="The Pronunciation page with the Try it box and the word list" loading="lazy"><figcaption>Type a sentence in Try it to see and hear what the voice will say.</figcaption></figure>
+  <div class="prose">
+  <p>Each row has the word as <em>Written</em>, how to <em>Say as</em>, a <em>Match case</em> tick (so "CAC" changes but "cac" in a web address doesn't) and a <em>Note</em> for the team. Spell the "say as" the way it sounds: "C A C" with spaces reads the letters, "Tax Stream" fixes the brand name, "Lek-key" helps with Lekki.</p>
+  </div>
+  <figure class="shot strip" data-shot="pronunciation-tools"><img src="shots/pronunciation-tools.webp" width="1114" height="51" alt="Add word, Import CSV and Export CSV buttons" loading="lazy"><figcaption>Add one word, or move the whole list in and out as a spreadsheet.</figcaption></figure>
+  <div class="prose">
+  <p>A CSV file for <span class="ui">Import CSV</span> needs a header row and four columns: <code>term,say_as,match_case,note</code>, with <code>yes</code> or <code>no</code> in the third. <span class="ui">Export CSV</span> saves the current list in the same layout, which is the easiest way to edit many words at once in Excel or Google Sheets.</p>
+  <div class="call"><b>Tip</b><p>Adding a word marks every line that contains it as out of date. Add words as soon as you hear a mistake, then regenerate only those lines.</p></div>
+  </div>
+</section>
+
+<!-- ============ TAX FACTS ============ -->
+<section class="sec" id="facts" data-roles="p r a" data-group="Shared settings" data-label="Tax facts">
+  <div class="eyebrow"><span>Tax facts page</span><span>·</span><span class="who">Everyone reads, producers edit</span></div>
+  <h2 class="h">Tax facts</h2>
+  <div class="prose">
+  <p>The script writer treats this list as the current law. If an expert's answer in the notes disagrees with it, the script uses the figure here and leaves a check for the expert. The fact check uses it too.</p>
+  </div>
+  <figure class="shot" data-shot="facts"><img src="shots/facts.webp" width="1440" height="900" alt="The Tax facts page listing facts with values, sources and dates" loading="lazy"><figcaption>Each fact has a value, a source and the date it took effect.</figcaption></figure>
+  <div class="prose">
+  <p>Keep it short and current. When a rule changes, update the fact here before the next episode is written and note the source, so a reviewer can check it. Ask the tax team to read the list once a quarter.</p>
+  </div>
+</section>
+
+<!-- ============ BRAND ============ -->
+<section class="sec" id="brand" data-roles="p a" data-group="Shared settings" data-label="Brand">
+  <div class="eyebrow"><span>Brand page</span><span>·</span><span class="who">Producers · Admins</span></div>
+  <h2 class="h">Brand</h2>
+  <div class="prose">
+  <p>The Brand page decides how The Bridge looks and sounds in every episode, video and page. Changes show in the preview straight away and save on their own. The preview is silent, with estimated timing.</p>
+  </div>
+  <figure class="shot" data-shot="brand"><img src="shots/brand.webp" width="1440" height="900" alt="The Brand page with a preview on the left and brand settings on the right" loading="lazy"><figcaption>The preview on the left; the settings run down the right and below.</figcaption></figure>
+  <div class="prose">
+  <h3 id="brand-import">Import a brand guide <span class="new">New</span></h3>
+  <p>Press <span class="ui">Import a brand guide</span> and choose a PDF brand book, a web page (.html) or a whole project folder zipped into one .zip file. The studio reads the colours, fonts and logo, including any font files inside the folder, and fits them to the stage. A summary then lists what changed.</p>
+  </div>
+  <figure class="shot" data-shot="brand-import"><img src="shots/brand-import.webp" width="1440" height="900" alt="The Brand page after an import, showing a summary with Undo import and Keep it" loading="lazy"><figcaption>After an import. Undo import puts the old brand back.</figcaption></figure>
+  <div class="prose">
+  <div class="call"><b>Tip</b><p>Zip the whole folder of a web brand kit, fonts and images included, rather than sending the .html file alone. The import can then use the real font files and logo.</p></div>
+
+  <h3 id="brand-logo">Logo and scene</h3>
+  <p><span class="ui">Upload logo</span> takes a transparent PNG made for dark backgrounds; SVG files are converted for you. Without a logo, the wordmark text is used. <em>Background scene</em> sets what sits behind the speakers: <em>Lagos bridge at night</em>, <em>Soft gradient</em>, <em>Grid</em>, <em>My image</em> or <em>Plain colour</em>.</p>
+
+  <h3 id="brand-words">Name and words</h3>
+  </div>
+  <figure class="shot strip" data-shot="brand-words"><img src="shots/brand-words.webp" width="706" height="446" alt="The Name and words panel" loading="lazy"><figcaption>The words that appear on every episode.</figcaption></figure>
+  <div class="prose">
+  <p><em>Show name</em> and <em>Tagline</em> head the interactive page. <em>Wordmark on screen</em> and <em>Byline</em> sit at the top left of the video; the byline shows in 16:9 only. <em>Badge</em> is the text in the AI badge. <em>AI disclosure</em> is the sentence the host reads and the pages print, so keep it plain and keep it in.</p>
+
+  <h3 id="brand-endcard">End card</h3>
+  </div>
+  <figure class="shot strip" data-shot="brand-endcard"><img src="shots/brand-endcard.webp" width="706" height="249" alt="The End card panel with headline, line, link and QR option" loading="lazy"><figcaption>The closing card of every video.</figcaption></figure>
+  <div class="prose">
+  <p>Set a <em>Headline</em>, a <em>Line under it</em> and a <em>Link</em>. <em>Show a QR code for the link</em> adds a code viewers can scan from a TV or laptop screen. Change the link when a campaign needs a tracked URL.</p>
+
+  <h3 id="brand-colours">Colours and fonts</h3>
+  </div>
+  <div class="gallery">
+    <figure class="shot" data-shot="brand-colours"><img src="shots/brand-colours.webp" width="448" height="343" alt="The Colours panel with swatches" loading="lazy"><figcaption>Click any swatch to change it.</figcaption></figure>
+    <figure class="shot" data-shot="brand-fonts"><img src="shots/brand-fonts.webp" width="448" height="461" alt="The Fonts panel" loading="lazy"><figcaption>Three fonts: display, body and labels.</figcaption></figure>
+  </div>
+  <div class="prose">
+  <p>The colour swatches cover the background, the horizon, main and secondary text, the brand accent, a second accent, and the Positive, Warning and Neutral colours used by cards. For fonts, choose <em>Google Fonts</em> and type the family name, or <em>Uploaded file</em> for a font you own. <em>Installed on the computer</em> only works on machines that have the font, so avoid it when several people export.</p>
+
+  <h3 id="brand-music">Music and sounds</h3>
+  </div>
+  <figure class="shot narrow" data-shot="brand-music"><img src="shots/brand-music.webp" width="448" height="728" alt="The Music and sounds panel with four music slots and a volume slider" loading="lazy"><figcaption>Four music slots and the level of music under speech.</figcaption></figure>
+  <div class="prose">
+  <p>There are four slots: <em>Intro sting</em> plays as the show opens, <em>Music bed</em> runs under the welcome, <em>Chapter ident</em> plays between parts and <em>Outro</em> runs under the sign-off. Press <span class="ui">Play</span> to hear a cue or upload your own. <em>Use the built-in cue for any empty slot</em> fills gaps with the studio's own music. <em>Music under speech</em> sets how loud music sits beneath the voices; keep it low enough that a phone speaker still carries every word.</p>
+  <div class="call rule"><b>Remember</b><p>Only upload music you own or have licensed for podcasts and social video. Platforms mute or remove videos with unlicensed music.</p></div>
+
+  <h3 id="brand-bookends">Intro and outro videos</h3>
+  </div>
+  <figure class="shot narrow" data-shot="brand-bookends"><img src="shots/brand-bookends.webp" width="448" height="509" alt="The Intro and outro videos panel with one upload per shape" loading="lazy"><figcaption>One intro and one outro for each shape.</figcaption></figure>
+  <div class="prose">
+  <p>Upload a short branded video for each shape you use. They are added on export when <em>Add the intro and outro video</em> is ticked. <em>Also put their sound at the start and end of the MP3</em> carries their audio into the podcast file.</p>
+  </div>
+</section>
+
+<!-- ============ TEAM ============ -->
+<section class="sec" id="team" data-roles="a" data-group="Admin" data-label="Team">
+  <div class="eyebrow"><span>Team page</span><span>·</span><span class="who">Admins</span></div>
+  <h2 class="h">Team</h2>
+  <div class="prose">
+  <p>Only people listed here can use the studio. Admins add people, change roles and reset passwords.</p>
+  </div>
+  <figure class="shot" data-shot="team"><img src="shots/team.webp" width="1440" height="900" alt="The Team page with members and the Add someone form" loading="lazy"><figcaption>The team, with the Add someone form on the right.</figcaption></figure>
+  <div class="prose">
+  <h3 id="add-someone">Adding someone</h3>
+  <ol class="steps">
+    <li><div>Type their work email and name, and pick a role.</div></li>
+    <li><div>Under <em>How they'll get in</em>, keep <em>I'll give them a temporary password</em>. The studio suggests a strong one. The invitation-link option only works once email sending is set up.</div></li>
+    <li><div>Press <span class="ui y">Add to the team</span>. A box appears with the address and password; press Copy.</div></li>
+    <li><div>Send them the details in a direct message, with the studio link, and ask them to change the password after signing in.</div></li>
+  </ol>
+  <h3 id="reset-password">When someone forgets their password</h3>
+  <p>Press <span class="ui">Set password</span> on their row. The studio suggests a new password; press <span class="ui">Set this password</span>, then <span class="ui">Copy it</span> and send it to them privately. Their old password stops working straight away. Change a role with the menu on their row, and press Remove when someone leaves.</p>
+  <div class="call rule"><b>Remember</b><p>Send passwords in a direct message, never in a group chat or a shared document.</p></div>
+  </div>
+</section>
+
+<!-- ============ SETTINGS ============ -->
+<section class="sec" id="settings" data-roles="a" data-group="Admin" data-label="Settings">
+  <div class="eyebrow"><span>Settings page</span><span>·</span><span class="who">Admins</span></div>
+  <h2 class="h">Settings</h2>
+  <figure class="shot" data-shot="settings"><img src="shots/settings.webp" width="1440" height="900" alt="The Settings page with AI, house style, voices and API keys" loading="lazy"><figcaption>Settings shared by every episode.</figcaption></figure>
+  <div class="prose">
+  <ul class="plain">
+    <li><b>AI provider</b> chooses Claude (Anthropic) or Gemini (Google) to write scripts, run fact checks and answer the chat, with the model name for each.</li>
+    <li><b>House style and standing instructions for the script writer</b> applies to every script. Put the show's tone, banned phrases and recurring segments here, and keep one-off requests in the episode's own instructions box.</li>
+    <li><b>Voices</b> picks the ElevenLabs model: Multilingual v2 (steady, recommended), Eleven v4 (newest, long-form), Eleven v3 (most expressive) or Flash v2.5 (fast, cheaper).</li>
+    <li><b>Mark exports as drafts until a reviewer approves</b> adds the Draft watermark to anything unapproved. Leave it on.</li>
+    <li><b>API keys</b> holds the AI and ElevenLabs keys. Keys are encrypted before they're stored and never sent back to the browser. <span class="ui">Test</span> checks that a key works.</li>
+  </ul>
+  <div class="call rule"><b>Remember</b><p>Changing the voice model marks every line in every episode as out of date, and stale lines are silent in exports until regenerated. Test a new model on one practice episode first.</p></div>
+  </div>
+</section>
+
+<!-- ============ PLAYBOOK ============ -->
+<section class="sec" id="playbook" data-roles="p r a" data-group="Getting the most from it" data-label="Marketing playbook">
+  <div class="eyebrow"><span>For the marketing team</span></div>
+  <h2 class="h">Marketing playbook</h2>
+  <div class="prose">
+  <p>The studio makes the files. This section is about turning one Friday session into a week of posts without cutting corners on review.</p>
+  <h3 id="rhythm">A weekly rhythm</h3>
+  </div>
+  <ol class="week">
+    <li><b>Friday</b>The Bridge session runs. Whoever took notes shares them with the producer privately.</li>
+    <li><b>Friday evening or Monday morning</b>The producer creates the episode and writes the script, then reads the anonymised table.</li>
+    <li><b>Monday</b>Edit the script and visuals, resolve the checks, generate voices and run Check every word. Send for review.</li>
+    <li><b>Tuesday</b>The reviewer listens, comments and approves. The producer fixes anything raised.</li>
+    <li><b>Wednesday</b>Export the full episode, MP3, interactive page and the three clip picks. Write the launch pack and publish the long forms.</li>
+    <li><b>Thursday to the next Friday</b>Release one clip a day on social channels, each pointing to the full episode, and invite people to the next session.</li>
+  </ol>
+  <div class="prose">
+  <h3 id="channels">Which export goes where</h3>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Channel</th><th>Export</th><th>Copy</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><b>YouTube</b></td><td>Full episode, 16:9, intro and outro on</td><td>Show notes as the description</td><td>Upload Captions .srt. Use the cover art as the thumbnail starting point.</td></tr>
+        <tr><td><b>Podcast apps</b></td><td>MP3 for podcast apps, cover art</td><td>Show notes</td><td>Upload through the podcast host. Chapters are already in the show notes.</td></tr>
+        <tr><td><b>Website</b></td><td>Interactive page (.html)</td><td>Show notes, transcript</td><td>The transcript helps search engines find the page.</td></tr>
+        <tr><td><b>LinkedIn</b></td><td>1:1 or 16:9 clip</td><td>LinkedIn post</td><td>Upload Captions .srt with the video. Many people watch with the sound off.</td></tr>
+        <tr><td><b>Reels, TikTok, Shorts</b></td><td>9:16 clip from a clip pick</td><td>Shorten the X post</td><td>Captions are already burned in. Keep clips under a minute.</td></tr>
+        <tr><td><b>WhatsApp</b></td><td>9:16 clip for Status, link to the page</td><td>WhatsApp broadcast</td><td>Send the broadcast once the page is live, so the link works.</td></tr>
+        <tr><td><b>X</b></td><td>1:1 or 16:9 clip</td><td>X post</td><td>Lead with the question the clip answers.</td></tr>
+        <tr><td><b>Newsletter</b></td><td>Cover art</td><td>Show notes, first paragraph</td><td>Link to the interactive page so readers can try the calculators.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="prose">
+  <h3 id="prompts-best">Getting better results from the AI</h3>
+  <ul class="plain">
+    <li>Say where. "In part 2, after Kelechi explains the threshold" beats "somewhere in the middle".</li>
+    <li>Name the card type you want ("a comparison bars card", "a steps card"), using the names in the <a href="#cards">card table</a>.</li>
+    <li>Ask for one change at a time when it matters, so Undo last undoes only that change.</li>
+    <li>Say what to keep: "Shorten this line but keep the ₦3 million figure."</li>
+    <li>For a large rewrite of one part, edit the lines in the Script tab yourself. It is faster than several rounds of chat.</li>
+    <li>Recurring requests belong in the house style on the Settings page, so every script starts closer to what you want.</li>
+  </ul>
+
+  <h3 id="before-publish">Before anything goes out</h3>
+  <p>Tick through this list for each episode. Like the quick start, the ticks stay in this browser.</p>
+  </div>
+  <div class="check-head"><div class="meter" aria-hidden="true"><i id="pbMeter"></i></div><span class="score" id="pbCount">0 of 8 done</span><button class="btn sm ghost" type="button" id="pbReset">Clear ticks</button></div>
+  <ol class="checklist" id="pb">
+    <li><input type="checkbox" id="pb1"><label for="pb1"><span class="t">Nobody from the session can be identified</span><span class="d">Names, companies, cities and exact figures are all changed.</span></label></li>
+    <li><input type="checkbox" id="pb2"><label for="pb2"><span class="t">Every figure matches Tax facts</span><span class="d">The fact check has run and its items are resolved.</span></label></li>
+    <li><input type="checkbox" id="pb3"><label for="pb3"><span class="t">Check every word has run</span><span class="d">No skipped or garbled words left.</span></label></li>
+    <li><input type="checkbox" id="pb4"><label for="pb4"><span class="t">Someone listened to the whole episode</span><span class="d">With audio loaded, start to finish.</span></label></li>
+    <li><input type="checkbox" id="pb5"><label for="pb5"><span class="t">The status is approved and the exports carry no watermark</span><span class="d">Export again if you exported before approval.</span></label></li>
+    <li><input type="checkbox" id="pb6"><label for="pb6"><span class="t">The AI badge and disclosure are in</span><span class="d">Badge on screen, disclosure read by the host.</span></label></li>
+    <li><input type="checkbox" id="pb7"><label for="pb7"><span class="t">The end card link works</span><span class="d">Scan the QR code with a phone.</span></label></li>
+    <li><input type="checkbox" id="pb8"><label for="pb8"><span class="t">Each post has been read by a person</span><span class="d">The launch pack is a draft until someone edits it.</span></label></li>
+  </ol>
+  <div class="prose">
+  <h3 id="lines">Lines we don't cross</h3>
+  <ul class="plain">
+    <li>Real attendees never appear, by name, voice, business or detail.</li>
+    <li>The audience always knows the voices are AI.</li>
+    <li>Cloned voices belong to people who agreed in writing.</li>
+    <li>Music is owned or licensed.</li>
+    <li>The draft setting stays on, and nobody switches it off to get round an approval.</li>
+  </ul>
+  </div>
+</section>
+
+<!-- ============ DEMO ============ -->
+<section class="sec" id="demo" data-roles="p r a" data-group="Getting the most from it" data-label="15-minute demo">
+  <div class="eyebrow"><span>For whoever presents</span></div>
+  <h2 class="h">The 15-minute demo</h2>
+  <div class="prose">
+  <p>Send this guide a day ahead and ask everyone to read <a href="#basics">Before you start</a>. The demo then only has to show the flow; the guide covers the detail, and the quick start covers the practice.</p>
+  <div class="call"><b>Prepare</b>
+    <ul class="plain">
+      <li>Pick a finished episode with voices, visuals and a launch pack. Writing a script live takes minutes, so show one that already exists.</li>
+      <li>Open it in Chrome, go to the Visuals tab and press Load audio before people join.</li>
+      <li>Download an exported clip and the interactive page beforehand, in case rendering live is slow.</li>
+      <li>Keep this page open in a second tab with the timer below.</li>
+    </ul>
+  </div>
+  </div>
+  <div class="demo">
+    <div class="clock" id="clock">
+      <div><div class="big" id="clkTime">00:00</div><div class="of" id="clkOf">of 15:00</div></div>
+      <div style="min-width:0"><div class="of">Now</div><div id="clkSeg" style="font-weight:600">Press Start when you begin</div></div>
+      <div class="ctl">
+        <button class="btn sm" type="button" id="clkBack">Back</button>
+        <button class="btn sm accent" type="button" id="clkGo">Start</button>
+        <button class="btn sm" type="button" id="clkNext">Next</button>
+        <button class="btn sm ghost" type="button" id="clkReset">Reset</button>
+      </div>
+      <div class="bar" aria-hidden="true"><i id="clkBar"></i></div>
+    </div>
+    <ol class="segs" id="segs">
+      <li data-min="1"><div class="when">0:00<small>1 min</small></div><div><h4>What the studio is</h4><p class="show">Show the six steps at the top of this guide, then the Episodes page in the studio.</p><p class="say">"Every Friday session becomes a week of content. An episode moves through six tabs, left to right."</p></div></li>
+      <li data-min="2"><div class="when">1:00<small>2 min</small></div><div><h4>Notes and anonymity</h4><p class="show">Open the episode's Notes tab. Point at the notes, the instructions box and the "What was anonymised" table.</p><p class="say">"Attendees never appear. The AI invents listeners, and one of us checks this table before anything goes out."</p></div></li>
+      <li data-min="3"><div class="when">3:00<small>3 min</small></div><div><h4>Script, cards and quiz</h4><p class="show">Script tab. Play one line, edit a word and show the pill change to Out of date. Open a card's Edit and the quiz. Show one Check under a line.</p><p class="say">"You edit it like a document. Cards appear on the words you choose."</p><p class="skip">Short of time: skip the quiz.</p></div></li>
+      <li data-min="2.5"><div class="when">6:00<small>2.5 min</small></div><div><h4>Visuals and the chat</h4><p class="show">Visuals tab. Play twenty seconds. Send "Make the captions boxed and turn on the progress bar", watch the preview, press Undo last. Switch to 9:16.</p><p class="say">"Ask in plain words. If you don't like it, undo."</p></div></li>
+      <li data-min="1.5"><div class="when">8:30<small>1.5 min</small></div><div><h4>Voices, cast and pronunciation</h4><p class="show">Voices tab: the cast table and the credit panel. Characters page: type a sentence and press Listen. Pronunciation page: Try it.</p><p class="say">"Fix the words before you generate. Every regenerate costs credit."</p><p class="skip">Short of time: skip Pronunciation and point to its section here.</p></div></li>
+      <li data-min="1.5"><div class="when">10:00<small>1.5 min</small></div><div><h4>Review and approval</h4><p class="show">Review tab: the approval panel, one comment, Versions.</p><p class="say">"Nothing goes out with a Draft watermark. A reviewer approves the exact script, and any later edit sends it back."</p></div></li>
+      <li data-min="2.5"><div class="when">11:30<small>2.5 min</small></div><div><h4>Export and the launch pack</h4><p class="show">Export tab: a clip pick and Set up this clip, then the launch pack Copy buttons. Open the downloaded interactive page and try a calculator.</p><p class="say">"One episode gives us YouTube, podcast apps, the website and three clips."</p></div></li>
+      <li data-min="1"><div class="when">14:00<small>1 min</small></div><div><h4>Where to go next</h4><p class="show">Back to this guide: the Show me menu, the search box, the quick start and the playbook.</p><p class="say">"Do the quick start this week with a practice episode. Questions go in the team channel."</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ HELP ============ -->
+<section class="sec" id="help" data-roles="p r a" data-group="Help" data-label="Troubleshooting">
+  <div class="eyebrow"><span>Everyone</span></div>
+  <h2 class="h">Troubleshooting</h2>
+  <details class="faq"><summary>The Script, Visuals and other tabs are greyed out</summary><div class="a"><p>They open once the episode has a script. Go to Notes and press Write the script, or Start a blank script.</p></div></details>
+  <details class="faq"><summary>Writing the script failed or is taking a long time</summary><div class="a"><p>The script is written in the background and long sessions can take several minutes. If the message says it is taking longer than expected, wait a few minutes and reload the page. An error that mentions a key or the AI provider means an admin should press Test next to the key in Settings.</p></div></details>
+  <details class="faq"><summary>The chat answered but nothing changed</summary><div class="a"><p>Look for lines starting with <em>Skipped:</em>, which explain what the AI couldn't do. Ask again and name the part, the speaker or the card. For a large change, edit the line in the Script tab yourself.</p></div></details>
+  <details class="faq"><summary>Load audio is missing or greyed out</summary><div class="a"><p>It appears once at least one line has a voice. While the preview builds it reads Preparing…; give it a moment.</p></div></details>
+  <details class="faq"><summary>A line sounds wrong</summary><div class="a"><p>Press Check words on the line. A misread word belongs in the <a href="#pronunciation">pronunciation library</a>. A flat or odd delivery often improves if you reword the sentence, or lower the character's Stability a little. Then press Regenerate.</p></div></details>
+  <details class="faq"><summary>Lines say Out of date, but nobody touched them</summary><div class="a"><p>Something they depend on changed: a pronunciation that appears in the line, the character's voice or sliders, or the voice model in Settings. Regenerate them before exporting, or those lines will be silent.</p></div></details>
+  <details class="faq"><summary>Part of the exported video or MP3 is silent</summary><div class="a"><p>Those lines have no current voice. The banner on the Export tab says how many. Generate them from the Voices tab and export again.</p></div></details>
+  <details class="faq"><summary>The video has a Draft watermark</summary><div class="a"><p>The episode isn't approved, or someone changed the script after approval and sent it back to review. Ask a reviewer to approve, then export again.</p></div></details>
+  <details class="faq"><summary>The video saved as WebM</summary><div class="a"><p>The browser can't make MP4. Export again in Chrome or Edge.</p></div></details>
+  <details class="faq"><summary>The export is slow or stopped</summary><div class="a"><p>A full episode takes about as long as the episode itself. Keep the tab open and in front, keep the laptop plugged in and stop it from sleeping. To test settings, export a short clip first.</p></div></details>
+  <details class="faq"><summary>ElevenLabs says we're out of credit</summary><div class="a"><p>The Voices tab shows how much is used and when it resets. An admin can move the ElevenLabs plan up a tier, or the team can wait for the reset. Meanwhile, edit scripts and visuals; they don't use voice credit.</p></div></details>
+  <details class="faq"><summary>The brand import picked the wrong colours</summary><div class="a"><p>Press Undo import, or keep it and click the swatches you want to change. A zipped folder with the real CSS gives a better result than a PDF.</p></div></details>
+  <details class="faq"><summary>I forgot my password</summary><div class="a"><p>Ask an admin to press Set password on your row of the Team page. Then change it from your name at the bottom left.</p></div></details>
+  <details class="faq"><summary>Can I use the studio on my phone?</summary><div class="a"><p>For reading, listening, commenting and approving, yes. Producing and exporting need a laptop or desktop with Chrome or Edge.</p></div></details>
+  <details class="faq"><summary>Where are the files kept?</summary><div class="a"><p>Episodes, voices and uploads are stored in the team's online studio. Exports download to your computer, usually to the Downloads folder. Keep the final files in the team's shared drive.</p></div></details>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="sec" id="glossary" data-roles="p r a" data-group="Help" data-label="Glossary">
+  <div class="eyebrow"><span>Everyone</span></div>
+  <h2 class="h">Glossary</h2>
+  <dl class="gloss">
+    <dt>Episode</dt><dd>One Friday session turned into a show, with its own number, script and exports.</dd>
+    <dt>Part</dt><dd>A chapter of an episode with its own title, shown on screen and in the chapter list.</dd>
+    <dt>Line</dt><dd>One thing one speaker says. Each line has its own voice audio.</dd>
+    <dt>Studio, voice note, written question</dt><dd>The three ways a line is delivered: spoken in the studio, played as a listener's recording, or read out by the host.</dd>
+    <dt>Listener</dt><dd>A fictional person the AI invents to ask a real question from the session.</dd>
+    <dt>Card</dt><dd>A graphic that appears on screen during a line, such as a big figure or a list of steps.</dd>
+    <dt>Cue words</dt><dd>The words in a line that make its card appear.</dd>
+    <dt>Quiz pause</dt><dd>A question that stops playback on the interactive page until the listener answers or skips.</dd>
+    <dt>Check</dt><dd>An item under a line that needs a decision, left by the script writer or the fact check.</dd>
+    <dt>Out of date</dt><dd>A line whose voice no longer matches its words or settings, and needs regenerating.</dd>
+    <dt>Listen-back check</dt><dd>Check words and Check every word: the studio transcribes the audio and flags words the voice skipped.</dd>
+    <dt>Credit</dt><dd>ElevenLabs' unit of use, roughly one per character voiced.</dd>
+    <dt>Instant clone</dt><dd>A voice copied from one to three minutes of audio, made inside the studio.</dd>
+    <dt>Professional clone</dt><dd>A higher-quality copy made in ElevenLabs from 30 minutes or more of audio.</dd>
+    <dt>Say as</dt><dd>How the voice should pronounce a word, set in the pronunciation library.</dd>
+    <dt>Tax facts</dt><dd>The list of current figures and rules that scripts and fact checks rely on.</dd>
+    <dt>Sting, bed, ident</dt><dd>Short opening music, music under the welcome, and the short cue between parts.</dd>
+    <dt>Music under speech</dt><dd>How loud the music sits beneath the voices.</dd>
+    <dt>Bookends</dt><dd>The intro and outro videos added to a full-episode export.</dd>
+    <dt>Draft watermark</dt><dd>The diagonal "Draft" mark on anything exported before approval.</dd>
+    <dt>Interactive page</dt><dd>A single .html file with the episode, chapters, quiz pauses, calculators and transcript.</dd>
+    <dt>Launch pack</dt><dd>Show notes, posts for LinkedIn, WhatsApp and X, and three clip picks, written by the AI.</dd>
+    <dt>Clip pick</dt><dd>A moment the AI suggests for a short vertical video.</dd>
+    <dt>House style</dt><dd>Standing instructions in Settings that every script follows.</dd>
+  </dl>
+</section>
+
+<!-- ============ SELF-CHECK ============ -->
+<section class="sec" id="selfcheck" data-roles="p r a" data-group="Help" data-label="Check yourself">
+  <div class="eyebrow"><span>Seven questions</span><span>·</span><span>About 3 minutes</span></div>
+  <h2 class="h">Check yourself</h2>
+  <div class="prose"><p>Try these after reading, or before the demo. Nothing is recorded.</p></div>
+  <div class="quiz" id="quizBox"></div>
+  <p class="score" id="quizScore"></p>
+</section>
+
+<!-- ============ UPDATING ============ -->
+<section class="sec" id="updating" data-roles="a" data-group="Help" data-label="Keeping this guide current">
+  <div class="eyebrow"><span>For whoever maintains the guide</span></div>
+  <h2 class="h">Keeping this guide current</h2>
+  <div class="prose">
+  <p>The guide is one HTML file that lives in the studio's code at <code>public/guide/index.html</code>, with its screenshots in <code>public/guide/shots/</code>. It is served at <a href="https://thebridge-studio.netlify.app/guide/" target="_blank" rel="noopener">thebridge-studio.netlify.app/guide/</a>, and the studio's sidebar links to it.</p>
+  <h3 id="update-easy">The easy way</h3>
+  <p>Ask Claude in the thebridgepodcast project to "update the user guide for" the new feature. It edits the file, takes new screenshots with fictional data, adds a line to What's new and opens a pull request for you to merge.</p>
+  <h3 id="update-hand">By hand</h3>
+  <ul class="plain">
+    <li>Each part of the guide is a <code>&lt;section class="sec"&gt;</code>. Its <code>data-label</code> is the name in the contents list, <code>data-group</code> is the heading it sits under, and <code>data-roles</code> lists who needs it (<code>p</code> producer, <code>r</code> reviewer, <code>a</code> admin). The contents list, search and Show me menu build themselves from these.</li>
+    <li>A screenshot is a <code>&lt;figure class="shot" data-shot="name"&gt;</code>. To replace one, save a new image under the same name in the shots folder.</li>
+    <li>The numbered pins come from the block marked <code>id="hotspots"</code> near the end of the file. Each pin has <code>x</code> and <code>y</code> as percentages of the image's width and height, and a <code>label</code> for the legend. Move a pin by changing its numbers.</li>
+    <li>Add a row to <a href="#new">What's new</a> and change the version and date at the top.</li>
+    <li>Use the studio's labels exactly as they appear on screen, and fictional names only.</li>
+  </ul>
+  </div>
+</section>
+
+</article>
+</div>
+
+<footer class="foot">
+  <span>The Bridge Studio · TaxStreem</span>
+  <span>Guide version 1.0 · 15 October 2026</span>
+  <a href="#start">Back to the top</a>
+</footer>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-labelledby="lbTitle">
+  <div class="lb-in">
+    <div class="lb-bar"><b id="lbTitle"></b><button class="btn sm" type="button" id="lbPins">Hide numbers</button><button class="btn sm accent" type="button" id="lbClose">Close</button></div>
+    <div id="lbBody"></div>
+  </div>
+</div>
+
+<!-- Numbered pins for each screenshot: x and y are percentages of the image's width and height. -->
+<script type="application/json" id="hotspots">
+{
+"login": {"spots": [{"n": 1, "x": 12.2, "y": 31.85, "label": "Your work email"}, {"n": 2, "x": 12.2, "y": 49.14, "label": "The password an admin gave you"}, {"n": 3, "x": 12.2, "y": 60.96, "label": "Sign in"}, {"n": 4, "x": 12.2, "y": 72.79, "label": "Sign-in link by email"}, {"n": 5, "x": 44.69, "y": 72.79, "label": "Reset your password"}]},
+"episodes": {"spots": [{"n": 1, "x": 1.11, "y": 10.59, "label": "Sections of the studio"}, {"n": 2, "x": 89.49, "y": 8.83, "label": "Start a new episode"}, {"n": 3, "x": 18.75, "y": 31.39, "label": "An episode: title, progress and last update"}, {"n": 4, "x": 91.22, "y": 34.01, "label": "Where it is: draft, review, approved, published"}, {"n": 5, "x": 1.67, "y": 88.61, "label": "Your account"}]},
+"notes": {"spots": [{"n": 1, "x": 3.47, "y": 12.23, "label": "The six steps of an episode"}, {"n": 2, "x": 5.03, "y": 24.0, "label": "Drop the session notes here"}, {"n": 3, "x": 5.03, "y": 39.89, "label": "Or paste them"}, {"n": 4, "x": 5.03, "y": 63.22, "label": "Session date"}, {"n": 5, "x": 52.31, "y": 32.5, "label": "Optional instructions for this episode"}, {"n": 6, "x": 52.31, "y": 42.65, "label": "Write (or rewrite) the script"}, {"n": 7, "x": 5.03, "y": 71.36, "label": "What the AI changed to protect people"}, {"n": 8, "x": 86.95, "y": 7.9, "label": "Episode number, delete"}]},
+"script-top": {"spots": [{"n": 1, "x": 2.85, "y": 15.68, "label": "Title and one-line summary"}, {"n": 2, "x": 2.85, "y": 30.13, "label": "The fictional listeners and their voices"}, {"n": 3, "x": 2.85, "y": 75.02, "label": "Calculators shown on the interactive page"}, {"n": 4, "x": 87.05, "y": 83.5, "label": "Voice every line that is new or changed"}]},
+"script-line": {"spots": [{"n": 1, "x": 1.55, "y": 6.88, "label": "Who speaks"}, {"n": 2, "x": 1.55, "y": 16.74, "label": "Studio, voice note or written question"}, {"n": 3, "x": 17.18, "y": 6.88, "label": "The words, editable"}, {"n": 4, "x": 17.18, "y": 28.33, "label": "Voice status"}, {"n": 5, "x": 33.18, "y": 29.25, "label": "A word the listen-back check flagged"}, {"n": 6, "x": 17.18, "y": 35.85, "label": "Visuals and quiz questions on this line"}, {"n": 7, "x": 87.46, "y": 6.88, "label": "Play this line"}, {"n": 8, "x": 87.46, "y": 15.48, "label": "Re-voice just this line"}, {"n": 9, "x": 87.46, "y": 24.08, "label": "Listen back for skipped words"}, {"n": 10, "x": 87.46, "y": 41.28, "label": "More: visuals, quiz, parts, order, delete"}]},
+"script-flag": {"spots": [{"n": 1, "x": 17.18, "y": 63.58, "label": "A check from the AI or the fact check"}, {"n": 2, "x": 18.64, "y": 82.3, "label": "Tick when it's handled"}]},
+"card-editor": {"spots": [{"n": 1, "x": 3.24, "y": 11.23, "label": "Type of visual"}, {"n": 2, "x": 3.24, "y": 30.41, "label": "Change the type"}, {"n": 3, "x": 51.08, "y": 30.07, "label": "The words that make it appear"}, {"n": 4, "x": 3.24, "y": 45.95, "label": "What it shows"}]},
+"chapter": {"spots": [{"n": 1, "x": 1.38, "y": 46.26, "label": "Part title, shown on screen and in the chapter list"}, {"n": 2, "x": 73.11, "y": 48.02, "label": "Music at the start of the part"}, {"n": 3, "x": 86.9, "y": 52.86, "label": "Remove the part break"}]},
+"quiz-editor": {"spots": [{"n": 1, "x": 3.24, "y": 22.31, "label": "The question"}, {"n": 2, "x": 3.84, "y": 37.72, "label": "Pick the right answer"}, {"n": 3, "x": 3.24, "y": 85.46, "label": "Shown after someone answers"}]},
+"visuals": {"spots": [{"n": 1, "x": 18.75, "y": 22.8, "label": "Preview shape: 16:9, 9:16 or 1:1"}, {"n": 2, "x": 59.84, "y": 22.91, "label": "Load or refresh the sound"}, {"n": 3, "x": 18.75, "y": 28.08, "label": "Live preview of the video"}, {"n": 4, "x": 22.96, "y": 72.94, "label": "Play and scrub"}, {"n": 5, "x": 71.21, "y": 28.85, "label": "What you asked for"}, {"n": 6, "x": 69.06, "y": 36.63, "label": "What the AI changed"}, {"n": 7, "x": 68.93, "y": 84.02, "label": "Ask for a change in plain words"}, {"n": 8, "x": 90.63, "y": 24.91, "label": "Undo the last chat change"}]},
+"onscreen": {"spots": [{"n": 1, "x": 4.9, "y": 31.27, "label": "Switch elements on or off"}, {"n": 2, "x": 4.9, "y": 61.6, "label": "Caption style"}, {"n": 3, "x": 28.71, "y": 61.6, "label": "Photos or initials"}, {"n": 4, "x": 52.52, "y": 61.04, "label": "End card length"}]},
+"visuals-portrait": {"spots": []},
+"voices": {"spots": [{"n": 1, "x": 5.03, "y": 30.47, "label": "Who speaks, in which voice, how many lines"}, {"n": 2, "x": 5.03, "y": 54.48, "label": "Voice what's new or changed"}, {"n": 3, "x": 16.12, "y": 54.48, "label": "Listen back to every line"}, {"n": 4, "x": 5.03, "y": 60.36, "label": "What it will cost"}, {"n": 5, "x": 52.31, "y": 30.47, "label": "Credit used this month"}]},
+"review": {"spots": [{"n": 1, "x": 5.03, "y": 27.38, "label": "Status, approval, open checks, voices to do"}, {"n": 2, "x": 5.03, "y": 44.55, "label": "Approve (reviewers and admins)"}, {"n": 3, "x": 38.09, "y": 53.2, "label": "Check every figure against Tax facts"}, {"n": 4, "x": 5.03, "y": 80.46, "label": "An item to fix or dismiss"}, {"n": 5, "x": 52.31, "y": 58.63, "label": "Comment on a line or the episode"}, {"n": 6, "x": 89.69, "y": 81.05, "label": "Go back to an earlier version"}]},
+"export": {"spots": [{"n": 1, "x": 3.47, "y": 13.2, "label": "Draft watermark until approved"}, {"n": 2, "x": 5.03, "y": 22.47, "label": "Video shape"}, {"n": 3, "x": 5.03, "y": 25.53, "label": "A clip, or the whole episode"}, {"n": 4, "x": 5.03, "y": 40.91, "label": "Render the video"}, {"n": 5, "x": 52.31, "y": 22.47, "label": "Podcast audio"}, {"n": 6, "x": 52.31, "y": 25.88, "label": "Interactive web page"}, {"n": 7, "x": 52.31, "y": 34.45, "label": "Captions and transcript"}, {"n": 8, "x": 27.89, "y": 51.27, "label": "Ready-to-post copy, editable"}, {"n": 9, "x": 5.94, "y": 74.26, "label": "Turn a suggested moment into a clip"}]},
+"characters": {"spots": [{"n": 1, "x": 5.03, "y": 13.7, "label": "Photo or initials on screen"}, {"n": 2, "x": 13.61, "y": 18.87, "label": "Background the script writer uses"}, {"n": 3, "x": 85.24, "y": 26.7, "label": "Pick or change the voice"}, {"n": 4, "x": 15.18, "y": 29.33, "label": "Fine-tune how the voice performs"}, {"n": 5, "x": 15.18, "y": 40.0, "label": "Hear any sentence in this voice"}, {"n": 6, "x": 15.18, "y": 88.11, "label": "Consent record for a cloned voice"}, {"n": 7, "x": 90.63, "y": 9.4, "label": "Add another host or expert"}]},
+"voice-library": {"spots": [{"n": 1, "x": 2.18, "y": 11.27, "label": "Library, your own voices, or a new clone"}, {"n": 2, "x": 2.18, "y": 20.62, "label": "Accent"}, {"n": 3, "x": 19.45, "y": 20.62, "label": "Female or male"}, {"n": 4, "x": 33.09, "y": 20.46, "label": "Search by feel: warm, podcast, Lagos"}, {"n": 5, "x": 81.36, "y": 32.55, "label": "Hear a sample"}, {"n": 6, "x": 87.52, "y": 32.55, "label": "Use it for this character"}]},
+"voice-clone": {"spots": [{"n": 1, "x": 2.18, "y": 37.4, "label": "One to three minutes of clean speech"}, {"n": 2, "x": 2.18, "y": 81.05, "label": "Written consent, required"}, {"n": 3, "x": 2.18, "y": 88.1, "label": "Create the clone"}]},
+"pronunciation": {"spots": [{"n": 1, "x": 20.07, "y": 20.8, "label": "Type any sentence"}, {"n": 2, "x": 20.07, "y": 26.69, "label": "What the voice will say"}, {"n": 3, "x": 91.29, "y": 20.8, "label": "Hear it"}, {"n": 4, "x": 20.62, "y": 39.36, "label": "As written on screen"}, {"n": 5, "x": 39.89, "y": 39.36, "label": "How the voice says it"}]},
+"pronunciation-tools": {"spots": [{"n": 1, "x": 1.08, "y": 23.3, "label": "Add a word"}, {"n": 2, "x": 9.14, "y": 23.3, "label": "Bring in a list"}, {"n": 3, "x": 18.28, "y": 23.3, "label": "Save the list"}]},
+"facts": {"spots": [{"n": 1, "x": 20.62, "y": 24.57, "label": "The fact"}, {"n": 2, "x": 40.38, "y": 24.57, "label": "The current figure or rule"}, {"n": 3, "x": 65.32, "y": 24.57, "label": "Where it comes from"}, {"n": 4, "x": 80.51, "y": 24.57, "label": "When it took effect"}]},
+"team": {"spots": [{"n": 1, "x": 55.12, "y": 25.12, "label": "Change someone's role"}, {"n": 2, "x": 71.82, "y": 25.12, "label": "Set a new password for them"}, {"n": 3, "x": 20.07, "y": 80.9, "label": "How they'll get in"}, {"n": 4, "x": 20.42, "y": 81.51, "label": "A password is made for you"}, {"n": 5, "x": 20.07, "y": 96.62, "label": "Add them"}]},
+"settings": {"spots": [{"n": 1, "x": 20.07, "y": 18.61, "label": "Which AI writes scripts"}, {"n": 2, "x": 20.07, "y": 44.22, "label": "Standing instructions for every script"}, {"n": 3, "x": 20.07, "y": 75.61, "label": "Voice model"}, {"n": 4, "x": 20.07, "y": 81.28, "label": "Draft watermark until approved"}, {"n": 5, "x": 70.97, "y": 15.89, "label": "Keys are stored encrypted"}, {"n": 6, "x": 87.23, "y": 19.95, "label": "Check a key works"}]},
+"account": {"spots": [{"n": 1, "x": 7.23, "y": 55.68, "label": "Change your password"}]},
+"brand": {"spots": [{"n": 1, "x": 18.75, "y": 15.67, "label": "Preview in each shape"}, {"n": 2, "x": 18.75, "y": 20.94, "label": "Live preview with your brand"}, {"n": 3, "x": 68.93, "y": 33.56, "label": "Import a guide: PDF, web page or zip"}, {"n": 4, "x": 89.58, "y": 49.22, "label": "Logo for dark backgrounds"}, {"n": 5, "x": 68.93, "y": 60.72, "label": "Background scene"}]},
+"brand-words": {"spots": [{"n": 1, "x": 4.39, "y": 41.03, "label": "Name shown top left of the video"}, {"n": 2, "x": 4.39, "y": 58.41, "label": "The AI badge text"}, {"n": 3, "x": 4.39, "y": 75.78, "label": "The disclosure the host reads"}]},
+"brand-endcard": {"spots": [{"n": 1, "x": 4.39, "y": 42.37, "label": "End card headline"}, {"n": 2, "x": 51.27, "y": 63.65, "label": "QR code to your link"}]},
+"brand-colours": {"spots": [{"n": 1, "x": 6.91, "y": 23.62, "label": "Click a swatch to change it"}]},
+"brand-fonts": {"spots": [{"n": 1, "x": 6.91, "y": 22.86, "label": "Font name"}, {"n": 2, "x": 6.91, "y": 33.04, "label": "Google Fonts, uploaded file or installed"}]},
+"brand-music": {"spots": [{"n": 1, "x": 83.57, "y": 11.85, "label": "Hear the cue"}, {"n": 2, "x": 6.91, "y": 18.27, "label": "Upload your own"}, {"n": 3, "x": 7.36, "y": 86.54, "label": "How loud music sits under voices"}]},
+"brand-bookends": {"spots": [{"n": 1, "x": 79.7, "y": 31.64, "label": "One upload per shape"}, {"n": 2, "x": 6.91, "y": 90.58, "label": "Use their sound in the MP3 too"}]},
+"brand-import": {"spots": [{"n": 1, "x": 69.76, "y": 40.78, "label": "What the import changed"}, {"n": 2, "x": 69.76, "y": 61.11, "label": "Put the old brand back"}, {"n": 3, "x": 18.75, "y": 20.94, "label": "The stage in the imported brand"}]},
+"phone-review": {"spots": []}
+}
+</script>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var KEY = "bridge-guide:";
+  function load(k, d) { try { var v = localStorage.getItem(KEY + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function save(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function fmt(sec) { var neg = sec < 0; sec = Math.floor(Math.abs(sec)); return (neg ? "-" : "") + pad(Math.floor(sec / 60)) + ":" + pad(sec % 60); }
+
+  var root = document.documentElement;
+  var article = $("#guide");
+  var sections = $$("section.sec", article);
+  var toc = $("#toc");
+
+  /* ---------- theme ---------- */
+  var themeBtn = $("#theme");
+  var mq = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  function isDark() { var t = root.getAttribute("data-theme"); return t ? t === "dark" : !!(mq && mq.matches); }
+  function paintTheme() { themeBtn.textContent = isDark() ? "Light" : "Dark"; }
+  var storedTheme = load("theme", null);
+  if (storedTheme === "dark" || storedTheme === "light") root.setAttribute("data-theme", storedTheme);
+  paintTheme();
+  themeBtn.addEventListener("click", function () {
+    var next = isDark() ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    save("theme", next);
+    paintTheme();
+  });
+  if (mq && mq.addEventListener) mq.addEventListener("change", paintTheme);
+
+  /* ---------- contents ---------- */
+  var groups = [];
+  sections.forEach(function (s) {
+    var name = s.getAttribute("data-group") || "";
+    var g = groups.filter(function (x) { return x.name === name; })[0];
+    if (!g) { g = { name: name, items: [] }; groups.push(g); }
+    g.items.push(s);
+  });
+  var html = "";
+  groups.forEach(function (g) {
+    html += '<div class="grp"><h2>' + esc(g.name) + "</h2><ol>";
+    g.items.forEach(function (s) {
+      var step = s.getAttribute("data-step");
+      html += '<li data-for="' + s.id + '"><a href="#' + s.id + '">' + (step ? "<i>" + step + "</i>" : "") + "<span>" + esc(s.getAttribute("data-label")) + "</span></a></li>";
+    });
+    html += "</ol></div>";
+  });
+  html += '<div class="rolebox"><label for="role2">Show me</label><select id="role2">' + $("#role").innerHTML + '</select><p>Pick your role to hide the parts you won’t use. Press <kbd>/</kbd> to search.</p></div>';
+  toc.innerHTML = html;
+  var tocLinks = {};
+  $$("li[data-for]", toc).forEach(function (li) { tocLinks[li.getAttribute("data-for")] = li.querySelector("a"); });
+
+  var tocBtn = $("#tocBtn");
+  function closeToc() { toc.classList.remove("open"); tocBtn.setAttribute("aria-expanded", "false"); }
+  tocBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    var open = !toc.classList.contains("open");
+    toc.classList.toggle("open", open);
+    tocBtn.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  document.addEventListener("click", function (e) {
+    if (toc.classList.contains("open") && !toc.contains(e.target) && e.target !== tocBtn) closeToc();
+  });
+
+  /* ---------- role filter ---------- */
+  var roleSel = $("#role"), roleSel2 = $("#role2");
+  var ROLE = { p: "a producer", r: "a reviewer", a: "an admin" };
+  function applyRole(r) {
+    if (!ROLE[r]) r = "all";
+    roleSel.value = r;
+    roleSel2.value = r;
+    var shown = 0;
+    sections.forEach(function (s) {
+      var ok = r === "all" || (s.getAttribute("data-roles") || "").split(/\s+/).indexOf(r) >= 0;
+      s.hidden = !ok;
+      if (ok) shown++;
+      var a = tocLinks[s.id];
+      if (a) a.parentNode.hidden = !ok;
+    });
+    $$(".grp", toc).forEach(function (g) { g.hidden = !$$("li", g).some(function (li) { return !li.hidden; }); });
+    var f = $("#filtered");
+    if (r === "all") { f.hidden = true; f.innerHTML = ""; return; }
+    f.hidden = false;
+    f.innerHTML = "<span>Showing the " + shown + " sections " + ROLE[r] + " needs.</span>" +
+      '<button class="btn sm" type="button" id="showAll">Show everything</button>';
+    $("#showAll").addEventListener("click", function () { save("role", "all"); applyRole("all"); });
+  }
+  [roleSel, roleSel2].forEach(function (sel) { sel.addEventListener("change", function () { save("role", sel.value); applyRole(sel.value); }); });
+  applyRole(load("role", "all"));
+
+  /* ---------- screenshots, pins and legends ---------- */
+  var spots = {};
+  try { spots = JSON.parse($("#hotspots").textContent); } catch (e) { spots = {}; }
+
+  function makeFrame(src, alt, name, w, h, lazy) {
+    var frame = document.createElement("div");
+    frame.className = "frame";
+    var img = document.createElement("img");
+    if (lazy) img.loading = "lazy";
+    img.decoding = "async"; img.alt = alt || ""; img.width = w; img.height = h; img.src = src;
+    frame.appendChild(img);
+    var list = (spots[name] && spots[name].spots) || [];
+    list.forEach(function (p) {
+      var pin = document.createElement("span");
+      pin.className = "pin";
+      pin.textContent = p.n;
+      pin.title = p.label;
+      pin.setAttribute("data-n", p.n);
+      pin.style.left = Math.max(1.4, Math.min(98.6, p.x)) + "%";
+      pin.style.top = Math.max(1.6, Math.min(98.4, p.y)) + "%";
+      frame.appendChild(pin);
+    });
+    var legend = null;
+    if (list.length) {
+      legend = document.createElement("ol");
+      legend.className = "legend";
+      legend.innerHTML = list.map(function (p) { return '<li data-n="' + p.n + '"><b>' + p.n + "</b><span>" + esc(p.label) + "</span></li>"; }).join("");
+      var hot = function (n, on) {
+        $$('[data-n="' + n + '"]', frame).forEach(function (x) { x.classList.toggle("hot", on); });
+        $$('[data-n="' + n + '"]', legend).forEach(function (x) { x.classList.toggle("hot", on); });
+      };
+      $$("li", legend).concat($$(".pin", frame)).forEach(function (el) {
+        var n = el.getAttribute("data-n");
+        el.addEventListener("mouseenter", function () { hot(n, true); });
+        el.addEventListener("mouseleave", function () { hot(n, false); });
+      });
+    }
+    return { frame: frame, legend: legend };
+  }
+
+  $$("figure.shot").forEach(function (fig) {
+    var img = fig.querySelector("img");
+    if (!img) return;
+    var name = fig.getAttribute("data-shot");
+    var w = +img.getAttribute("width"), h = +img.getAttribute("height");
+    var built = makeFrame(img.getAttribute("src"), img.alt, name, w, h, img.getAttribute("loading") === "lazy");
+    var zoom = document.createElement("span");
+    zoom.className = "zoom"; zoom.textContent = "Enlarge";
+    built.frame.appendChild(zoom);
+    built.frame.tabIndex = 0;
+    built.frame.setAttribute("role", "button");
+    built.frame.setAttribute("aria-label", "Enlarge screenshot: " + (img.alt || name));
+    fig.replaceChild(built.frame, img);
+    if (built.legend) fig.insertBefore(built.legend, fig.querySelector("figcaption"));
+    var open = function () { openLightbox(fig, name, w, h); };
+    built.frame.addEventListener("click", function (e) { if (!e.target.classList.contains("pin")) open(); });
+    built.frame.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+  });
+
+  var lb = $("#lb"), lbBody = $("#lbBody"), lbReturn = null;
+  function openLightbox(fig, name, w, h) {
+    var img = fig.querySelector(".frame img");
+    var cap = fig.querySelector("figcaption");
+    var built = makeFrame(img.getAttribute("src"), img.alt, name, w, h);
+    var tall = h > w * 1.4;
+    built.frame.style.maxWidth = (tall ? Math.min(w, 440) : Math.min(w, 1400)) + "px";
+    lbBody.innerHTML = "";
+    lbBody.className = "";
+    lbBody.appendChild(built.frame);
+    if (built.legend) lbBody.appendChild(built.legend);
+    $("#lbPins").hidden = !built.legend;
+    $("#lbPins").textContent = "Hide numbers";
+    $("#lbTitle").textContent = cap ? cap.textContent : img.alt;
+    lbReturn = document.activeElement;
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";
+    $("#lbClose").focus();
+  }
+  function closeLightbox() {
+    if (lb.hidden) return;
+    lb.hidden = true;
+    lbBody.innerHTML = "";
+    document.body.style.overflow = "";
+    if (lbReturn && lbReturn.focus) lbReturn.focus();
+  }
+  $("#lbClose").addEventListener("click", closeLightbox);
+  lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
+  $("#lbPins").addEventListener("click", function () {
+    var off = lbBody.classList.toggle("nopins");
+    this.textContent = off ? "Show numbers" : "Hide numbers";
+  });
+
+  /* ---------- copy buttons ---------- */
+  function selectText(el) {
+    try { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); } catch (e) { /* ignore */ }
+  }
+  $$(".copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var q = b.parentNode.querySelector("q");
+      var text = q ? q.textContent : "";
+      var done = function (ok) {
+        b.textContent = ok ? "Copied" : "Selected, press Ctrl+C";
+        setTimeout(function () { b.textContent = "Copy"; }, 1800);
+      };
+      try {
+        navigator.clipboard.writeText(text).then(function () { done(true); }, function () { selectText(q); done(false); });
+      } catch (e) { selectText(q); done(false); }
+    });
+  });
+
+  /* ---------- checklists ---------- */
+  function checklist(listId, meterId, countId, resetId) {
+    var list = $("#" + listId);
+    if (!list) return;
+    var boxes = $$('input[type="checkbox"]', list);
+    var state = load("check:" + listId, {}) || {};
+    var paint = function () {
+      var n = 0;
+      boxes.forEach(function (b) { b.closest("li").classList.toggle("done", b.checked); if (b.checked) n++; });
+      $("#" + meterId).style.width = (n / boxes.length) * 100 + "%";
+      $("#" + countId).textContent = n === boxes.length ? "All " + n + " done" : n + " of " + boxes.length + " done";
+    };
+    boxes.forEach(function (b) {
+      b.checked = !!state[b.id];
+      b.addEventListener("change", function () { state[b.id] = b.checked; save("check:" + listId, state); paint(); });
+    });
+    $("#" + resetId).addEventListener("click", function () {
+      state = {};
+      boxes.forEach(function (b) { b.checked = false; });
+      save("check:" + listId, state);
+      paint();
+    });
+    paint();
+  }
+  checklist("qs", "qsMeter", "qsCount", "qsReset");
+  checklist("pb", "pbMeter", "pbCount", "pbReset");
+
+  /* ---------- self-check ---------- */
+  var QUIZ = [
+    { q: "Who can approve an episode?", o: ["Any producer", "A reviewer or an admin", "Only the person who wrote the script", "Nobody, it approves itself once the checks are resolved"], a: 1,
+      why: "Approve only shows for reviewers and admins. Producers send an episode for review." },
+    { q: "You fix a typo after the episode was approved. What happens?", o: ["Nothing, the approval stays", "The episode goes back to review and exports carry the Draft watermark again", "The studio blocks the edit"], a: 1,
+      why: "Approval covers the script exactly as it was approved, so any change sends it back to review." },
+    { q: "The voice keeps reading CAC as one word. What's the best fix?", o: ["Rewrite every line to avoid the word", "Add CAC to the pronunciation library, then regenerate the lines that use it", "Switch to another voice model in Settings"], a: 1,
+      why: "The library fixes it for every episode. Changing the voice model would mark every line in every episode as out of date." },
+    { q: "Which export suits Instagram Reels?", o: ["The full episode in 16:9", "A 9:16 clip, for example from a clip pick", "The WAV master"], a: 1,
+      why: "Reels, TikTok, Shorts and WhatsApp Status are vertical. Set up this clip (9:16) on a clip pick does the setup for you." },
+    { q: "In the session, the expert quoted a figure that differs from Tax facts. What does the script use?", o: ["The expert's figure, since it came from the session", "The Tax facts figure, with a check left for the expert", "Neither, the line is dropped"], a: 1,
+      why: "The script writer treats Tax facts as the current law and flags the difference so a person can decide." },
+    { q: "What has to be in place before a cloned voice is used?", o: ["The speaker's written consent, recorded on the Characters page", "A professional clone made in ElevenLabs", "An admin's approval in Settings"], a: 0,
+      why: "Create clone stays grey until the consent box is ticked, and the character keeps a record of where the consent is kept." },
+    { q: "You ask the chat for a warmer accent colour. Which episodes change?", o: ["Only the one you're editing", "Every episode, since colours belong to the show", "Only episodes still in draft"], a: 1,
+      why: "Brand colours, the on-screen layout and the end card are shared by the whole show." }
+  ];
+  var quizBox = $("#quizBox");
+  var answered = {};
+  function paintScore() {
+    var n = Object.keys(answered).length;
+    var right = Object.keys(answered).filter(function (k) { return answered[k]; }).length;
+    var el = $("#quizScore");
+    if (n < QUIZ.length) { el.textContent = n ? right + " right so far, " + (QUIZ.length - n) + " to go" : ""; return; }
+    el.innerHTML = "You got " + right + " of " + QUIZ.length + (right === QUIZ.length ? ". Ready for the studio." : ". The explanations point to the sections to reread.") +
+      ' <button class="btn sm" type="button" id="quizAgain">Try again</button>';
+    $("#quizAgain").addEventListener("click", renderQuiz);
+  }
+  function renderQuiz() {
+    answered = {};
+    quizBox.innerHTML = QUIZ.map(function (item, i) {
+      return '<div class="q" data-i="' + i + '"><h4>' + (i + 1) + ". " + esc(item.q) + '</h4><div class="opts">' +
+        item.o.map(function (opt, j) {
+          var id = "quiz" + i + "o" + j;
+          return '<label for="' + id + '"><input type="radio" name="quiz' + i + '" id="' + id + '" value="' + j + '"><span>' + esc(opt) + "</span></label>";
+        }).join("") + '</div><p class="why" hidden></p></div>';
+    }).join("");
+    $$(".q", quizBox).forEach(function (box) {
+      var i = +box.getAttribute("data-i");
+      $$("input", box).forEach(function (inp) {
+        inp.addEventListener("change", function () {
+          var pick = +inp.value, ok = pick === QUIZ[i].a;
+          answered[i] = ok;
+          $$("label", box).forEach(function (lab, j) {
+            lab.querySelector("input").disabled = true;
+            if (j === QUIZ[i].a) lab.classList.add("right");
+            else if (j === pick) lab.classList.add("wrong");
+          });
+          var why = box.querySelector(".why");
+          why.hidden = false;
+          why.className = "why" + (ok ? "" : " miss");
+          why.innerHTML = "<b>" + (ok ? "Right." : "Not quite.") + "</b> " + esc(QUIZ[i].why);
+          paintScore();
+        });
+      });
+    });
+    paintScore();
+  }
+  renderQuiz();
+
+  /* ---------- demo clock ---------- */
+  var segs = $$("#segs > li");
+  var mins = segs.map(function (li) { return parseFloat(li.getAttribute("data-min")) || 1; });
+  var ends = [], acc = 0;
+  mins.forEach(function (m) { acc += m * 60; ends.push(acc); });
+  var TOTAL = acc, elapsed = 0, running = false, last = 0, timer = null, cur = 0, started = false;
+  function tick() { var now = Date.now(); if (running) elapsed += now - last; last = now; paintClock(); }
+  function paintClock() {
+    var t = elapsed / 1000;
+    $("#clkTime").textContent = fmt(t);
+    $("#clkOf").textContent = t > TOTAL ? fmt(t - TOTAL) + " over 15:00" : "of " + fmt(TOTAL);
+    $("#clkBar").style.width = Math.min(100, (t / TOTAL) * 100) + "%";
+    $("#clock").classList.toggle("over", t > TOTAL);
+    var title = segs[cur].querySelector("h4").textContent;
+    var left = ends[cur] - t;
+    $("#clkSeg").textContent = !started ? "Press Start when you begin" :
+      (cur + 1) + ". " + title + " · " + (left >= 0 ? fmt(left) + " left for this part" : fmt(-left) + " behind");
+    segs.forEach(function (li, k) {
+      li.classList.toggle("now", started && k === cur);
+      li.classList.toggle("past", started && k < cur);
+    });
+    $("#clkGo").textContent = running ? "Pause" : started ? "Resume" : "Start";
+  }
+  function showSeg() { try { segs[cur].scrollIntoView({ block: "nearest" }); } catch (e) { /* ignore */ } }
+  $("#clkGo").addEventListener("click", function () {
+    if (running) { tick(); running = false; clearInterval(timer); }
+    else { running = true; started = true; last = Date.now(); clearInterval(timer); timer = setInterval(tick, 250); }
+    paintClock();
+  });
+  $("#clkNext").addEventListener("click", function () { started = true; if (cur < segs.length - 1) cur++; paintClock(); showSeg(); });
+  $("#clkBack").addEventListener("click", function () { if (cur > 0) cur--; paintClock(); showSeg(); });
+  $("#clkReset").addEventListener("click", function () { running = false; started = false; clearInterval(timer); elapsed = 0; cur = 0; paintClock(); });
+  paintClock();
+
+  /* ---------- search ---------- */
+  var index = [];
+  $$("details.faq", article).forEach(function (d, i) { if (!d.id) d.id = "faq-" + (i + 1); });
+  $$("h3:not([id])", article).forEach(function (h, i) { h.id = "topic-" + (i + 1); });
+  sections.forEach(function (s) {
+    var label = s.getAttribute("data-label") || "";
+    var anchor = s.id, head = label;
+    $$("h2.h, h3, h4, p, li, td, dt, dd, figcaption, q, summary", s).forEach(function (el) {
+      if (el.closest("#quizBox") || el.closest(".legend") || el.closest(".flow")) return;
+      if (el.tagName === "LI" && el.querySelector("p, h4, li, label")) {
+        if (!el.closest("#qs, #pb")) return;
+      }
+      if (el.tagName === "H3") { anchor = el.id; head = el.textContent.replace(/\s*New\s*$/, ""); }
+      var text = el.textContent.replace(/\s+/g, " ").trim();
+      if (!text) return;
+      var a = anchor, hd = head;
+      var faq = el.closest("details.faq");
+      if (faq) { a = faq.id; hd = faq.querySelector("summary").textContent; }
+      index.push({ anchor: a, section: label, head: hd, text: text, lc: (hd + " " + text).toLowerCase(), isHead: /^H[234]$/.test(el.tagName) || el.tagName === "SUMMARY" });
+    });
+  });
+  // Legend labels are searchable too, so "progress bar" or "consent" finds the right screenshot.
+  $$("figure.shot", article).forEach(function (fig) {
+    var s = fig.closest("section.sec");
+    var name = fig.getAttribute("data-shot");
+    var list = (spots[name] && spots[name].spots) || [];
+    if (!list.length) return;
+    var anchor = s.id, head = s.getAttribute("data-label");
+    var hs = $$("h3", s).filter(function (h) { return h.compareDocumentPosition(fig) & Node.DOCUMENT_POSITION_FOLLOWING; });
+    if (hs.length) { anchor = hs[hs.length - 1].id; head = hs[hs.length - 1].textContent; }
+    if (!fig.id) fig.id = "shot-" + name;
+    var text = "Screenshot: " + list.map(function (p) { return p.label; }).join(" · ");
+    index.push({ anchor: fig.id, section: s.getAttribute("data-label"), head: head, text: text, lc: (head + " " + text).toLowerCase(), isHead: false });
+  });
+
+  var q = $("#q"), results = $("#results"), hits = [], sel = -1;
+  function reEsc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function snippet(text, terms) {
+    var lc = text.toLowerCase(), at = -1;
+    terms.forEach(function (t) { var i = lc.indexOf(t); if (i >= 0 && (at < 0 || i < at)) at = i; });
+    var start = Math.max(0, at - 50), out = text.slice(start, start + 150);
+    var html = (start > 0 ? "…" : "") + esc(out) + (start + 150 < text.length ? "…" : "");
+    var re = new RegExp("(" + terms.map(function (t) { return reEsc(esc(t)); }).join("|") + ")", "gi");
+    return html.replace(re, "<mark>$1</mark>");
+  }
+  function runSearch() {
+    var terms = q.value.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!terms.length) { closeResults(); return; }
+    var best = {};
+    index.forEach(function (e) {
+      for (var i = 0; i < terms.length; i++) if (e.lc.indexOf(terms[i]) < 0) return;
+      var score = 1 + (e.isHead ? 4 : 0);
+      terms.forEach(function (t) { if (e.head.toLowerCase().indexOf(t) >= 0) score += 3; });
+      var cur = best[e.anchor];
+      if (!cur) best[e.anchor] = { e: e, score: score, n: 1 };
+      else { cur.n++; if (score > cur.score) { cur.score = score; cur.e = e; } }
+    });
+    hits = Object.keys(best).map(function (k) { var b = best[k]; return { anchor: k, e: b.e, score: b.score + Math.min(b.n, 4) * 0.5 }; })
+      .sort(function (a, b) { return b.score - a.score; }).slice(0, 8);
+    sel = hits.length ? 0 : -1;
+    results.innerHTML = hits.length ? hits.map(function (h, i) {
+      return '<a href="#' + h.anchor + '" data-a="' + h.anchor + '"' + (i === 0 ? ' class="on"' : "") + "><small>" + esc(h.e.section) + "</small><b>" + esc(h.e.head) + "</b><span>" + snippet(h.e.text, terms) + "</span></a>";
+    }).join("") : '<div class="none">Nothing found for “' + esc(q.value) + '”. Try a label from the studio, such as Export MP4 or Tax facts.</div>';
+    results.hidden = false;
+    $$("a", results).forEach(function (a) {
+      a.addEventListener("click", function (e) { e.preventDefault(); go(a.getAttribute("data-a")); });
+    });
+  }
+  function closeResults() { results.hidden = true; results.innerHTML = ""; hits = []; sel = -1; }
+  function moveSel(d) {
+    var links = $$("a", results);
+    if (!links.length) return;
+    sel = (sel + d + links.length) % links.length;
+    links.forEach(function (a, i) { a.classList.toggle("on", i === sel); });
+    links[sel].scrollIntoView({ block: "nearest" });
+  }
+  q.addEventListener("input", runSearch);
+  q.addEventListener("focus", function () { if (q.value.trim()) runSearch(); });
+  q.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowDown") { e.preventDefault(); moveSel(1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); moveSel(-1); }
+    else if (e.key === "Enter") { e.preventDefault(); if (hits[sel]) go(hits[sel].anchor); }
+    else if (e.key === "Escape") { closeResults(); q.blur(); }
+  });
+  document.addEventListener("click", function (e) { if (!results.hidden && !results.contains(e.target) && e.target !== q) closeResults(); });
+
+  function go(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var sec = el.closest("section.sec");
+    if (sec && sec.hidden) { save("role", "all"); applyRole("all"); }
+    var d = el.closest("details");
+    if (d) d.open = true;
+    closeResults();
+    closeToc();
+    el.scrollIntoView({ block: "start" });
+    try { history.replaceState(null, "", "#" + id); } catch (e) { /* sandboxed */ }
+    var target = el.tagName === "DETAILS" ? el.querySelector("summary") : el;
+    target.classList.remove("flash");
+    void target.offsetWidth;
+    target.classList.add("flash");
+  }
+  toc.addEventListener("click", function (e) {
+    var a = e.target.closest("a[href^='#']");
+    if (!a) return;
+    e.preventDefault();
+    go(a.getAttribute("href").slice(1));
+  });
+  article.addEventListener("click", function (e) {
+    var a = e.target.closest("a[href^='#']");
+    if (!a || a.getAttribute("href").length < 2) return;
+    var id = a.getAttribute("href").slice(1);
+    if (!document.getElementById(id)) return;
+    e.preventDefault();
+    go(id);
+  });
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener("keydown", function (e) {
+    var tag = (e.target.tagName || "").toLowerCase();
+    var typing = tag === "input" || tag === "textarea" || tag === "select" || e.target.isContentEditable;
+    if (e.key === "/" && !typing) { e.preventDefault(); q.focus(); q.select(); }
+    else if (e.key === "Escape") { closeLightbox(); closeToc(); }
+  });
+
+  /* ---------- reading position ---------- */
+  var bar = $("#readbar"), ticking = false;
+  function onScroll() {
+    ticking = false;
+    var doc = document.documentElement;
+    var max = doc.scrollHeight - window.innerHeight;
+    bar.style.width = (max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0) + "%";
+    var current = null;
+    sections.forEach(function (s) { if (!s.hidden && s.getBoundingClientRect().top < 140) current = s; });
+    Object.keys(tocLinks).forEach(function (id) { tocLinks[id].classList.toggle("on", !!current && current.id === id); });
+  }
+  window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+
+  var hash = (location.hash || "").slice(1);
+  if (hash && /^[A-Za-z0-9._~-]+$/.test(hash) && document.getElementById(hash)) setTimeout(function () { go(hash); }, 60);
+})();
+</script>
+
+</body>
+</html>
