@@ -105,6 +105,7 @@ function Shell() {
           ))}
         </nav>
         <div className="side-foot">
+          <a href="/guide/" target="_blank" rel="noopener">User guide</a>
           <a href="#/account">{app.user.fullName || app.user.email}</a>
           <span>{app.user.role}</span>
           {store.mode === "supabase" && <button className="btn sm" onClick={() => store.signOut()}>Sign out</button>}
